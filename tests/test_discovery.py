@@ -1,0 +1,48 @@
+import unittest
+from unittest.mock import patch, MagicMock
+from pyludusavi.discovery import find_ludusavi, LudusaviNotFoundError
+
+
+class TestDiscovery(unittest.TestCase):
+    @patch("shutil.which")
+    @patch("subprocess.run")
+    def test_find_by_explicit_path(self, mock_run, mock_which):
+        mock_run.return_value = MagicMock(returncode=0)
+        path = "/custom/ludusavi"
+        result = find_ludusavi(explicit_path=path)
+        self.assertEqual(result, [path])
+        mock_run.assert_called_with(
+            [path, "--version"], capture_output=True, text=True, check=False
+        )
+
+    @patch("shutil.which")
+    @patch("subprocess.run")
+    def test_find_by_path_lookup(self, mock_run, mock_which):
+        mock_run.return_value = MagicMock(returncode=0)
+        mock_which.return_value = "/usr/bin/ludusavi"
+        result = find_ludusavi()
+        self.assertEqual(result, ["/usr/bin/ludusavi"])
+
+    @patch("shutil.which")
+    @patch("subprocess.run")
+    def test_find_by_flatpak(self, mock_run, mock_which):
+        # 1. PATH lookup fails (shutil.which returns None)
+        # 2. Flatpak lookup succeeds (shutil.which returns path, _verify returns True)
+        mock_which.side_effect = [None, "/usr/bin/flatpak"]
+        mock_run.return_value = MagicMock(returncode=0)
+
+        result = find_ludusavi()
+        self.assertEqual(result, ["flatpak", "run", "com.github.mtkennerly.ludusavi"])
+        # Verify that it tried to verify the flatpak command
+        mock_run.assert_called_with(
+            ["flatpak", "run", "com.github.mtkennerly.ludusavi", "--version"],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+
+    @patch("shutil.which")
+    def test_not_found_raises_error(self, mock_which):
+        mock_which.return_value = None
+        with self.assertRaises(LudusaviNotFoundError):
+            find_ludusavi()

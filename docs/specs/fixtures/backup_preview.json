@@ -1,0 +1,626 @@
+{
+  "overall": {
+    "totalGames": 9,
+    "totalBytes": 31440534,
+    "processedGames": 9,
+    "processedBytes": 31440534,
+    "changedGames": {
+      "new": 9,
+      "different": 0,
+      "same": 0
+    }
+  },
+  "games": {
+    "Grand Theft Auto IV": {
+      "decision": "Processed",
+      "change": "New",
+      "files": {
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/12210/pfx/drive_c/users/steamuser/AppData/Local/Rockstar Games/GTA IV/Settings/SETTINGS.CFG": {
+          "change": "New",
+          "bytes": 1469
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/12210/pfx/drive_c/users/steamuser/Documents/Rockstar Games/GTA IV/Profiles/5FCEB769/501C4FD0.dat": {
+          "change": "New",
+          "bytes": 1087
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/12210/pfx/drive_c/users/steamuser/Documents/Rockstar Games/GTA IV/Profiles/5FCEB769/ControlMap.dat": {
+          "change": "New",
+          "bytes": 756
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/12210/pfx/drive_c/users/steamuser/Documents/Rockstar Games/GTA IV/Profiles/5FCEB769/ProfileSettings": {
+          "change": "New",
+          "bytes": 1032
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/12210/pfx/drive_c/users/steamuser/Documents/Rockstar Games/GTA IV/Profiles/5FCEB769/cloudsavedata.dat": {
+          "change": "New",
+          "bytes": 2506
+        }
+      },
+      "registry": {}
+    },
+    "Halo 4": {
+      "decision": "Processed",
+      "change": "New",
+      "files": {
+        "/home/beallio/.var/app/com.valvesoftware.Steam/.local/share/Steam/userdata/1661068491/976730/remote/2568794251755142/Saves/AceSettings/data": {
+          "change": "New",
+          "bytes": 17326,
+          "duplicatedBy": [
+            "Halo: The Master Chief Collection"
+          ]
+        },
+        "/home/beallio/.var/app/com.valvesoftware.Steam/.local/share/Steam/userdata/1661068491/976730/remote/2568794251755142/Saves/SaveGame/halo0/campaign/deepSave": {
+          "change": "New",
+          "bytes": 1172839,
+          "duplicatedBy": [
+            "Halo: Combat Evolved Anniversary",
+            "Halo: The Master Chief Collection"
+          ]
+        },
+        "/home/beallio/.var/app/com.valvesoftware.Steam/.local/share/Steam/userdata/1661068491/976730/remote/2568794251755142/Saves/SaveGame/halo0/campaign/header": {
+          "change": "New",
+          "bytes": 9577,
+          "duplicatedBy": [
+            "Halo: Combat Evolved Anniversary",
+            "Halo: The Master Chief Collection"
+          ]
+        },
+        "/home/beallio/.var/app/com.valvesoftware.Steam/.local/share/Steam/userdata/1661068491/976730/remote/2568794251755142/Saves/SaveGame/halo6/campaign/deepSave": {
+          "change": "New",
+          "bytes": 593014,
+          "duplicatedBy": [
+            "Halo: Reach",
+            "Halo: The Master Chief Collection"
+          ]
+        },
+        "/home/beallio/.var/app/com.valvesoftware.Steam/.local/share/Steam/userdata/1661068491/976730/remote/2568794251755142/Saves/SaveGame/halo6/campaign/header": {
+          "change": "New",
+          "bytes": 9556,
+          "duplicatedBy": [
+            "Halo: Reach",
+            "Halo: The Master Chief Collection"
+          ]
+        }
+      },
+      "registry": {}
+    },
+    "Halo: Combat Evolved Anniversary": {
+      "decision": "Processed",
+      "change": "New",
+      "files": {
+        "/home/beallio/.var/app/com.valvesoftware.Steam/.local/share/Steam/userdata/1661068491/976730/remote/2568794251755142/Saves/SaveGame/halo0/campaign/deepSave": {
+          "change": "New",
+          "bytes": 1172839,
+          "duplicatedBy": [
+            "Halo 4",
+            "Halo: The Master Chief Collection"
+          ]
+        },
+        "/home/beallio/.var/app/com.valvesoftware.Steam/.local/share/Steam/userdata/1661068491/976730/remote/2568794251755142/Saves/SaveGame/halo0/campaign/header": {
+          "change": "New",
+          "bytes": 9577,
+          "duplicatedBy": [
+            "Halo 4",
+            "Halo: The Master Chief Collection"
+          ]
+        }
+      },
+      "registry": {}
+    },
+    "Halo: Reach": {
+      "decision": "Processed",
+      "change": "New",
+      "files": {
+        "/home/beallio/.var/app/com.valvesoftware.Steam/.local/share/Steam/userdata/1661068491/976730/remote/2568794251755142/Saves/SaveGame/halo6/campaign/deepSave": {
+          "change": "New",
+          "bytes": 593014,
+          "duplicatedBy": [
+            "Halo 4",
+            "Halo: The Master Chief Collection"
+          ]
+        },
+        "/home/beallio/.var/app/com.valvesoftware.Steam/.local/share/Steam/userdata/1661068491/976730/remote/2568794251755142/Saves/SaveGame/halo6/campaign/header": {
+          "change": "New",
+          "bytes": 9556,
+          "duplicatedBy": [
+            "Halo 4",
+            "Halo: The Master Chief Collection"
+          ]
+        }
+      },
+      "registry": {}
+    },
+    "Halo: The Master Chief Collection": {
+      "decision": "Processed",
+      "change": "New",
+      "files": {
+        "/home/beallio/.var/app/com.valvesoftware.Steam/.local/share/Steam/userdata/1661068491/976730/remote/2568794251755142/Saves/AceSettings/data": {
+          "change": "New",
+          "bytes": 17326,
+          "duplicatedBy": [
+            "Halo 4"
+          ]
+        },
+        "/home/beallio/.var/app/com.valvesoftware.Steam/.local/share/Steam/userdata/1661068491/976730/remote/2568794251755142/Saves/SaveGame/halo0/campaign/deepSave": {
+          "change": "New",
+          "bytes": 1172839,
+          "duplicatedBy": [
+            "Halo 4",
+            "Halo: Combat Evolved Anniversary"
+          ]
+        },
+        "/home/beallio/.var/app/com.valvesoftware.Steam/.local/share/Steam/userdata/1661068491/976730/remote/2568794251755142/Saves/SaveGame/halo0/campaign/header": {
+          "change": "New",
+          "bytes": 9577,
+          "duplicatedBy": [
+            "Halo 4",
+            "Halo: Combat Evolved Anniversary"
+          ]
+        },
+        "/home/beallio/.var/app/com.valvesoftware.Steam/.local/share/Steam/userdata/1661068491/976730/remote/2568794251755142/Saves/SaveGame/halo6/campaign/deepSave": {
+          "change": "New",
+          "bytes": 593014,
+          "duplicatedBy": [
+            "Halo 4",
+            "Halo: Reach"
+          ]
+        },
+        "/home/beallio/.var/app/com.valvesoftware.Steam/.local/share/Steam/userdata/1661068491/976730/remote/2568794251755142/Saves/SaveGame/halo6/campaign/header": {
+          "change": "New",
+          "bytes": 9556,
+          "duplicatedBy": [
+            "Halo 4",
+            "Halo: Reach"
+          ]
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/976730/pfx/drive_c/users/steamuser/AppData/LocalLow/MCC/ClockSkew.json": {
+          "change": "New",
+          "bytes": 18
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/976730/pfx/drive_c/users/steamuser/AppData/LocalLow/MCC/Config/HaloReach/preferences.dat": {
+          "change": "New",
+          "bytes": 372712
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/976730/pfx/drive_c/users/steamuser/AppData/LocalLow/MCC/Config/NetworkSessionLayer/preferences.dat": {
+          "change": "New",
+          "bytes": 4096
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/976730/pfx/drive_c/users/steamuser/AppData/LocalLow/MCC/Config/autosave_HaloReach.bin": {
+          "change": "New",
+          "bytes": 10878976
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/976730/pfx/drive_c/users/steamuser/AppData/LocalLow/MCC/Saved/Config/CrashReportClient/UE4CC-Windows-85A90177485868BCB36594B4AB065330/CrashReportClient.ini": {
+          "change": "New",
+          "bytes": 114
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/976730/pfx/drive_c/users/steamuser/AppData/LocalLow/MCC/Saved/Config/WindowsNoEditor/Compat.ini": {
+          "change": "New",
+          "bytes": 2
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/976730/pfx/drive_c/users/steamuser/AppData/LocalLow/MCC/Saved/Config/WindowsNoEditor/DeviceProfiles.ini": {
+          "change": "New",
+          "bytes": 2
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/976730/pfx/drive_c/users/steamuser/AppData/LocalLow/MCC/Saved/Config/WindowsNoEditor/EditorScriptingUtilities.ini": {
+          "change": "New",
+          "bytes": 2
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/976730/pfx/drive_c/users/steamuser/AppData/LocalLow/MCC/Saved/Config/WindowsNoEditor/Engine.ini": {
+          "change": "New",
+          "bytes": 368
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/976730/pfx/drive_c/users/steamuser/AppData/LocalLow/MCC/Saved/Config/WindowsNoEditor/Game.ini": {
+          "change": "New",
+          "bytes": 2
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/976730/pfx/drive_c/users/steamuser/AppData/LocalLow/MCC/Saved/Config/WindowsNoEditor/GameUserSettings.ini": {
+          "change": "New",
+          "bytes": 97582
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/976730/pfx/drive_c/users/steamuser/AppData/LocalLow/MCC/Saved/Config/WindowsNoEditor/Hardware.ini": {
+          "change": "New",
+          "bytes": 2
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/976730/pfx/drive_c/users/steamuser/AppData/LocalLow/MCC/Saved/Config/WindowsNoEditor/Input.ini": {
+          "change": "New",
+          "bytes": 2
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/976730/pfx/drive_c/users/steamuser/AppData/LocalLow/MCC/Saved/Config/WindowsNoEditor/Scalability.ini": {
+          "change": "New",
+          "bytes": 2
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/976730/pfx/drive_c/users/steamuser/AppData/LocalLow/MCC/Saved/webcache/Cache/data_0": {
+          "change": "New",
+          "bytes": 45056
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/976730/pfx/drive_c/users/steamuser/AppData/LocalLow/MCC/Saved/webcache/Cache/data_1": {
+          "change": "New",
+          "bytes": 270336
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/976730/pfx/drive_c/users/steamuser/AppData/LocalLow/MCC/Saved/webcache/Cache/data_2": {
+          "change": "New",
+          "bytes": 1056768
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/976730/pfx/drive_c/users/steamuser/AppData/LocalLow/MCC/Saved/webcache/Cache/data_3": {
+          "change": "New",
+          "bytes": 4202496
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/976730/pfx/drive_c/users/steamuser/AppData/LocalLow/MCC/Saved/webcache/Cache/f_000001": {
+          "change": "New",
+          "bytes": 36876
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/976730/pfx/drive_c/users/steamuser/AppData/LocalLow/MCC/Saved/webcache/Cache/f_000002": {
+          "change": "New",
+          "bytes": 41280
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/976730/pfx/drive_c/users/steamuser/AppData/LocalLow/MCC/Saved/webcache/Cache/f_000003": {
+          "change": "New",
+          "bytes": 1334853
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/976730/pfx/drive_c/users/steamuser/AppData/LocalLow/MCC/Saved/webcache/Cache/f_000004": {
+          "change": "New",
+          "bytes": 1496094
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/976730/pfx/drive_c/users/steamuser/AppData/LocalLow/MCC/Saved/webcache/Cache/f_000005": {
+          "change": "New",
+          "bytes": 175266
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/976730/pfx/drive_c/users/steamuser/AppData/LocalLow/MCC/Saved/webcache/Cache/f_000006": {
+          "change": "New",
+          "bytes": 47038
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/976730/pfx/drive_c/users/steamuser/AppData/LocalLow/MCC/Saved/webcache/Cache/f_000007": {
+          "change": "New",
+          "bytes": 116779
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/976730/pfx/drive_c/users/steamuser/AppData/LocalLow/MCC/Saved/webcache/Cache/f_000008": {
+          "change": "New",
+          "bytes": 32818
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/976730/pfx/drive_c/users/steamuser/AppData/LocalLow/MCC/Saved/webcache/Cache/f_000009": {
+          "change": "New",
+          "bytes": 62804
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/976730/pfx/drive_c/users/steamuser/AppData/LocalLow/MCC/Saved/webcache/Cache/f_00000a": {
+          "change": "New",
+          "bytes": 70899
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/976730/pfx/drive_c/users/steamuser/AppData/LocalLow/MCC/Saved/webcache/Cache/index": {
+          "change": "New",
+          "bytes": 524656
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/976730/pfx/drive_c/users/steamuser/AppData/LocalLow/MCC/Saved/webcache/Cookies": {
+          "change": "New",
+          "bytes": 36864
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/976730/pfx/drive_c/users/steamuser/AppData/LocalLow/MCC/Saved/webcache/Cookies-journal": {
+          "change": "New",
+          "bytes": 0
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/976730/pfx/drive_c/users/steamuser/AppData/LocalLow/MCC/Saved/webcache/GPUCache/data_0": {
+          "change": "New",
+          "bytes": 8192
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/976730/pfx/drive_c/users/steamuser/AppData/LocalLow/MCC/Saved/webcache/GPUCache/data_1": {
+          "change": "New",
+          "bytes": 270336
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/976730/pfx/drive_c/users/steamuser/AppData/LocalLow/MCC/Saved/webcache/GPUCache/data_2": {
+          "change": "New",
+          "bytes": 8192
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/976730/pfx/drive_c/users/steamuser/AppData/LocalLow/MCC/Saved/webcache/GPUCache/data_3": {
+          "change": "New",
+          "bytes": 8192
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/976730/pfx/drive_c/users/steamuser/AppData/LocalLow/MCC/Saved/webcache/GPUCache/index": {
+          "change": "New",
+          "bytes": 262512
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/976730/pfx/drive_c/users/steamuser/AppData/LocalLow/MCC/Saved/webcache/Visited Links": {
+          "change": "New",
+          "bytes": 131072
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/976730/pfx/drive_c/users/steamuser/AppData/LocalLow/MCC/StreamingInstallSavedData.bin": {
+          "change": "New",
+          "bytes": 28
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/976730/pfx/drive_c/users/steamuser/AppData/LocalLow/MCC/SystemSettingsData.bin": {
+          "change": "New",
+          "bytes": 1089
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/976730/pfx/drive_c/users/steamuser/AppData/LocalLow/MCC/Temporary/HaloReach/autosave/asq_campaign_m10_5919E73C_692E2E2D.film": {
+          "change": "New",
+          "bytes": 2224816
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/976730/pfx/drive_c/users/steamuser/AppData/LocalLow/MCC/Temporary/campaigncarnagereport1_3528_0_0.xml": {
+          "change": "New",
+          "bytes": 2081
+        }
+      },
+      "registry": {}
+    },
+    "Injustice 2": {
+      "decision": "Processed",
+      "change": "New",
+      "files": {
+        "/home/beallio/.var/app/com.valvesoftware.Steam/.local/share/Steam/userdata/1661068491/627270/remote/Injustice2GameSettings": {
+          "change": "New",
+          "bytes": 211
+        },
+        "/home/beallio/.var/app/com.valvesoftware.Steam/.local/share/Steam/userdata/1661068491/627270/remote/Injustice2Multiverse": {
+          "change": "New",
+          "bytes": 10136
+        },
+        "/home/beallio/.var/app/com.valvesoftware.Steam/.local/share/Steam/userdata/1661068491/627270/remote/Injustice2Progression_2025-12-20_21.save": {
+          "change": "New",
+          "bytes": 34343
+        },
+        "/home/beallio/.var/app/com.valvesoftware.Steam/.local/share/Steam/userdata/1661068491/627270/remote/Injustice2Progression_2025-12-20_22.save": {
+          "change": "New",
+          "bytes": 35336
+        }
+      },
+      "registry": {}
+    },
+    "MechWarrior 5: Mercenaries": {
+      "decision": "Processed",
+      "change": "New",
+      "files": {
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/784080/pfx/drive_c/users/steamuser/AppData/Local/MW5Mercs/Saved/Config/WindowsNoEditor/ApexDestruction.ini": {
+          "change": "New",
+          "bytes": 2
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/784080/pfx/drive_c/users/steamuser/AppData/Local/MW5Mercs/Saved/Config/WindowsNoEditor/Compat.ini": {
+          "change": "New",
+          "bytes": 2
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/784080/pfx/drive_c/users/steamuser/AppData/Local/MW5Mercs/Saved/Config/WindowsNoEditor/DeviceProfiles.ini": {
+          "change": "New",
+          "bytes": 2
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/784080/pfx/drive_c/users/steamuser/AppData/Local/MW5Mercs/Saved/Config/WindowsNoEditor/EditorScriptingUtilities.ini": {
+          "change": "New",
+          "bytes": 2
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/784080/pfx/drive_c/users/steamuser/AppData/Local/MW5Mercs/Saved/Config/WindowsNoEditor/Engine.ini": {
+          "change": "New",
+          "bytes": 1628
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/784080/pfx/drive_c/users/steamuser/AppData/Local/MW5Mercs/Saved/Config/WindowsNoEditor/Game.ini": {
+          "change": "New",
+          "bytes": 2
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/784080/pfx/drive_c/users/steamuser/AppData/Local/MW5Mercs/Saved/Config/WindowsNoEditor/GameUserSettings.ini": {
+          "change": "New",
+          "bytes": 19950
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/784080/pfx/drive_c/users/steamuser/AppData/Local/MW5Mercs/Saved/Config/WindowsNoEditor/GameplayTags.ini": {
+          "change": "New",
+          "bytes": 2
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/784080/pfx/drive_c/users/steamuser/AppData/Local/MW5Mercs/Saved/Config/WindowsNoEditor/Hardware.ini": {
+          "change": "New",
+          "bytes": 2
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/784080/pfx/drive_c/users/steamuser/AppData/Local/MW5Mercs/Saved/Config/WindowsNoEditor/Input.ini": {
+          "change": "New",
+          "bytes": 2
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/784080/pfx/drive_c/users/steamuser/AppData/Local/MW5Mercs/Saved/Config/WindowsNoEditor/MotoSynth.ini": {
+          "change": "New",
+          "bytes": 2
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/784080/pfx/drive_c/users/steamuser/AppData/Local/MW5Mercs/Saved/Config/WindowsNoEditor/Niagara.ini": {
+          "change": "New",
+          "bytes": 2
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/784080/pfx/drive_c/users/steamuser/AppData/Local/MW5Mercs/Saved/Config/WindowsNoEditor/OculusVR.ini": {
+          "change": "New",
+          "bytes": 2
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/784080/pfx/drive_c/users/steamuser/AppData/Local/MW5Mercs/Saved/Config/WindowsNoEditor/Paper2D.ini": {
+          "change": "New",
+          "bytes": 2
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/784080/pfx/drive_c/users/steamuser/AppData/Local/MW5Mercs/Saved/Config/WindowsNoEditor/PhysXVehicles.ini": {
+          "change": "New",
+          "bytes": 2
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/784080/pfx/drive_c/users/steamuser/AppData/Local/MW5Mercs/Saved/Config/WindowsNoEditor/RuntimeOptions.ini": {
+          "change": "New",
+          "bytes": 2
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/784080/pfx/drive_c/users/steamuser/AppData/Local/MW5Mercs/Saved/Config/WindowsNoEditor/Scalability.ini": {
+          "change": "New",
+          "bytes": 2
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/784080/pfx/drive_c/users/steamuser/AppData/Local/MW5Mercs/Saved/Config/WindowsNoEditor/Synthesis.ini": {
+          "change": "New",
+          "bytes": 2
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/784080/pfx/drive_c/users/steamuser/AppData/Local/MW5Mercs/Saved/Config/WindowsNoEditor/VariantManagerContent.ini": {
+          "change": "New",
+          "bytes": 2
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/784080/pfx/drive_c/users/steamuser/AppData/Local/MW5Mercs/Saved/SaveGames/A68C01654DC119CFD83F4EA257C7428B/6A0AC04A4F97183B0EBD04B44096B93E.sav": {
+          "change": "New",
+          "bytes": 649501
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/784080/pfx/drive_c/users/steamuser/AppData/Local/MW5Mercs/Saved/SaveGames/A68C01654DC119CFD83F4EA257C7428B/701C88AA44920055CA226BA06DCF9DCE.sav": {
+          "change": "New",
+          "bytes": 382923
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/784080/pfx/drive_c/users/steamuser/AppData/Local/MW5Mercs/Saved/SaveGames/A68C01654DC119CFD83F4EA257C7428B/7BD2BE6542C470A1CF57C78DD11D5199.sav": {
+          "change": "New",
+          "bytes": 382923
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/784080/pfx/drive_c/users/steamuser/AppData/Local/MW5Mercs/Saved/SaveGames/A68C01654DC119CFD83F4EA257C7428B/Campaign.json": {
+          "change": "New",
+          "bytes": 1982
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/784080/pfx/drive_c/users/steamuser/AppData/Local/MW5Mercs/Saved/SaveGames/A68C01654DC119CFD83F4EA257C7428B/F26EF8824AD09479502276B2BF20B678.sav": {
+          "change": "New",
+          "bytes": 647440
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/784080/pfx/drive_c/users/steamuser/AppData/Local/MW5Mercs/Saved/SaveGames/blocked_contacts_0002551e05004314984585e55cfb664b.sav": {
+          "change": "New",
+          "bytes": 5
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/784080/pfx/drive_c/users/steamuser/AppData/Local/MW5Mercs/Saved/SaveGames/saved_contacts_0002551e05004314984585e55cfb664b.sav": {
+          "change": "New",
+          "bytes": 5
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/784080/pfx/drive_c/users/steamuser/AppData/Local/MW5Mercs/Saved/SaveGames/steam_autocloud.vdf": {
+          "change": "New",
+          "bytes": 53
+        },
+        "/run/media/beallio/extreme_ssd/steam/steamapps/compatdata/784080/pfx/drive_c/users/steamuser/AppData/Local/MW5Mercs/Saved/SavedHOTAS/HOTASMappings.Remap": {
+          "change": "New",
+          "bytes": 4227
+        }
+      },
+      "registry": {}
+    },
+    "OpenHV": {
+      "decision": "Processed",
+      "change": "New",
+      "files": {
+        "/home/beallio/.config/openra/Logs/client.log": {
+          "change": "New",
+          "bytes": 0,
+          "duplicatedBy": [
+            "OpenRA"
+          ]
+        },
+        "/home/beallio/.config/openra/Logs/debug.log": {
+          "change": "New",
+          "bytes": 0,
+          "duplicatedBy": [
+            "OpenRA"
+          ]
+        },
+        "/home/beallio/.config/openra/Logs/geoip.log": {
+          "change": "New",
+          "bytes": 0,
+          "duplicatedBy": [
+            "OpenRA"
+          ]
+        },
+        "/home/beallio/.config/openra/Logs/graphics.log": {
+          "change": "New",
+          "bytes": 0,
+          "duplicatedBy": [
+            "OpenRA"
+          ]
+        },
+        "/home/beallio/.config/openra/Logs/nat.log": {
+          "change": "New",
+          "bytes": 0,
+          "duplicatedBy": [
+            "OpenRA"
+          ]
+        },
+        "/home/beallio/.config/openra/Logs/perf.log": {
+          "change": "New",
+          "bytes": 406,
+          "duplicatedBy": [
+            "OpenRA"
+          ]
+        },
+        "/home/beallio/.config/openra/Logs/server.log": {
+          "change": "New",
+          "bytes": 0,
+          "duplicatedBy": [
+            "OpenRA"
+          ]
+        },
+        "/home/beallio/.config/openra/Logs/sound.log": {
+          "change": "New",
+          "bytes": 0,
+          "duplicatedBy": [
+            "OpenRA"
+          ]
+        },
+        "/home/beallio/.config/openra/ModMetadata/cnc-release-20250330.yaml": {
+          "change": "New",
+          "bytes": 25646,
+          "duplicatedBy": [
+            "OpenRA"
+          ]
+        }
+      },
+      "registry": {}
+    },
+    "OpenRA": {
+      "decision": "Processed",
+      "change": "New",
+      "files": {
+        "/home/beallio/.config/openra/Logs/client.log": {
+          "change": "New",
+          "bytes": 0,
+          "duplicatedBy": [
+            "OpenHV"
+          ]
+        },
+        "/home/beallio/.config/openra/Logs/debug.log": {
+          "change": "New",
+          "bytes": 0,
+          "duplicatedBy": [
+            "OpenHV"
+          ]
+        },
+        "/home/beallio/.config/openra/Logs/geoip.log": {
+          "change": "New",
+          "bytes": 0,
+          "duplicatedBy": [
+            "OpenHV"
+          ]
+        },
+        "/home/beallio/.config/openra/Logs/graphics.log": {
+          "change": "New",
+          "bytes": 0,
+          "duplicatedBy": [
+            "OpenHV"
+          ]
+        },
+        "/home/beallio/.config/openra/Logs/nat.log": {
+          "change": "New",
+          "bytes": 0,
+          "duplicatedBy": [
+            "OpenHV"
+          ]
+        },
+        "/home/beallio/.config/openra/Logs/perf.log": {
+          "change": "New",
+          "bytes": 406,
+          "duplicatedBy": [
+            "OpenHV"
+          ]
+        },
+        "/home/beallio/.config/openra/Logs/server.log": {
+          "change": "New",
+          "bytes": 0,
+          "duplicatedBy": [
+            "OpenHV"
+          ]
+        },
+        "/home/beallio/.config/openra/Logs/sound.log": {
+          "change": "New",
+          "bytes": 0,
+          "duplicatedBy": [
+            "OpenHV"
+          ]
+        },
+        "/home/beallio/.config/openra/ModMetadata/cnc-release-20250330.yaml": {
+          "change": "New",
+          "bytes": 25646,
+          "duplicatedBy": [
+            "OpenHV"
+          ]
+        }
+      },
+      "registry": {}
+    }
+  }
+}
