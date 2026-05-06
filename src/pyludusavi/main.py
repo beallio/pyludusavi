@@ -543,3 +543,37 @@ class Ludusavi:
         if custom_game:
             args.extend(["--custom-game", custom_game])
         self.executor.execute(args, mode="SPAWN")
+
+    def add_game_alias(self, name: str, alias: str) -> None:
+        """
+        Add a game alias to the Ludusavi configuration.
+
+        This method updates the `customGames` section in `config.yaml` to map a
+        custom name to an existing game in the manifest.
+
+        Args:
+            name: The custom name for the game.
+            alias: The official title of the game as it appears in the manifest.
+        """
+        import json
+
+        path = self.config_path()
+        response = self.config_show()
+        config = response.data
+
+        new_custom = {
+            "name": name,
+            "alias": alias,
+            "files": [],
+            "registry": [],
+            "installDir": [],
+            "winePrefix": [],
+        }
+
+        # Avoid duplicates
+        custom_games = config.setdefault("customGames", [])
+        if not any(g.get("name") == name for g in custom_games):
+            custom_games.append(new_custom)
+
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(config, f, indent=2)
