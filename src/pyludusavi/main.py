@@ -73,11 +73,11 @@ class Ludusavi:
         assert response is not None
         return response
 
-    def config_path(self) -> LudusaviResponse:
+    def config_path(self) -> str:
         """Show the path to the Ludusavi configuration file."""
         response = self.executor.execute(["config", "path"], mode="TEXT")
         assert response is not None
-        return response
+        return response.data.strip()
 
     # --- Data Group ---
 

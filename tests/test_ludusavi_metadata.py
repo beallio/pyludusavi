@@ -36,7 +36,7 @@ class TestLudusaviMetadata(unittest.TestCase):
             command=["ludusavi", "config", "path"],
         )
         result = self.ludusavi.config_path()
-        self.assertEqual(result.data, "/path/to/config.yaml")
+        self.assertEqual(result, "/path/to/config.yaml")
         mock_execute.assert_called_with(["config", "path"], mode="TEXT")
 
     @patch("pyludusavi.core.LudusaviExecutor.execute")
