@@ -232,7 +232,7 @@ class Ludusavi:
             args.extend(["--comment", comment])
         if game:
             args.append(game)
-        response = self.executor.execute(args, mode="JSON")
+        response = self.executor.execute(args, mode="TEXT")
         assert response is not None
         return response
 
@@ -313,14 +313,16 @@ class Ludusavi:
 
     def bulk_api(self, input_data: Dict[str, Any]) -> LudusaviResponse:
         """Execute bulk requests using JSON input."""
-        response = self.executor.execute(["api"], mode="STDIN_JSON", input_data=input_data)
+        response = self.executor.execute(
+            ["api"], mode="STDIN_JSON", input_data=input_data, auto_api=False
+        )
         assert response is not None
         return response
 
     def wrap(self, command: List[str]) -> LudusaviResponse:
         """Wrap restore/backup around game execution."""
         args = ["wrap", "--"] + command
-        response = self.executor.execute(args, mode="JSON")
+        response = self.executor.execute(args, mode="TEXT")
         assert response is not None
         return response
 

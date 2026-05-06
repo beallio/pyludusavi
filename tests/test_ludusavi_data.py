@@ -34,3 +34,13 @@ class TestLudusaviData(unittest.TestCase):
         mock_execute.return_value = LudusaviResponse(data={}, raw={}, warnings="", command=[])
         self.ludusavi.backups_list(path="/custom/path")
         mock_execute.assert_called_with(["backups", "--path", "/custom/path"], mode="JSON")
+
+    @patch("pyludusavi.core.LudusaviExecutor.execute")
+    def test_backups_edit(self, mock_execute):
+        mock_execute.return_value = LudusaviResponse(
+            data="Edited", raw="Edited", warnings="", command=[]
+        )
+        self.ludusavi.backups_edit(game="Witcher 3", comment="verified")
+        mock_execute.assert_called_with(
+            ["backups", "edit", "--comment", "verified", "Witcher 3"], mode="TEXT"
+        )

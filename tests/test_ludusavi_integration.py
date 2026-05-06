@@ -27,10 +27,12 @@ class TestLudusaviIntegration(unittest.TestCase):
         mock_execute.return_value = LudusaviResponse(data={}, raw={}, warnings="", command=[])
         payload = {"requests": []}
         self.ludusavi.bulk_api(payload)
-        mock_execute.assert_called_with(["api"], mode="STDIN_JSON", input_data=payload)
+        mock_execute.assert_called_with(
+            ["api"], mode="STDIN_JSON", input_data=payload, auto_api=False
+        )
 
     @patch("pyludusavi.core.LudusaviExecutor.execute")
     def test_wrap(self, mock_execute):
         mock_execute.return_value = LudusaviResponse(data={}, raw={}, warnings="", command=[])
         self.ludusavi.wrap(["./game.exe", "--arg"])
-        mock_execute.assert_called_with(["wrap", "--", "./game.exe", "--arg"], mode="JSON")
+        mock_execute.assert_called_with(["wrap", "--", "./game.exe", "--arg"], mode="TEXT")
