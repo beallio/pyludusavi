@@ -48,7 +48,9 @@ class Ludusavi:
     ) -> Union[str, Dict]:
         """Get the Ludusavi JSON/YAML schema for a specific category."""
         mode = "JSON" if format == "json" else "TEXT"
-        response = self.executor.execute(["schema", "--format", format, category], mode=mode)
+        response = self.executor.execute(
+            ["schema", "--format", format, category], mode=mode, auto_api=False
+        )
         assert response is not None
         return response.data
 

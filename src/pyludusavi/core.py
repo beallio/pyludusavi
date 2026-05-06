@@ -53,6 +53,7 @@ class LudusaviExecutor:
         input_data: Optional[Dict] = None,
         timeout: Optional[float] = 30.0,
         env: Optional[Dict[str, str]] = None,
+        auto_api: bool = True,
     ) -> Optional[LudusaviResponse]:
         """
         Execute a Ludusavi command.
@@ -63,6 +64,7 @@ class LudusaviExecutor:
             input_data: Dictionary to be sent via stdin (only for STDIN_JSON).
             timeout: Maximum time to wait for the process.
             env: Environment variables for the subprocess.
+            auto_api: If True, automatically appends --api to JSON/STDIN_JSON modes.
 
         Returns:
             LudusaviResponse or None (for SPAWN mode).
@@ -70,7 +72,7 @@ class LudusaviExecutor:
         full_cmd = self.command_prefix + args
 
         # Append --api if mode involves JSON parsing
-        if mode in ["JSON", "STDIN_JSON"] and "--api" not in full_cmd:
+        if auto_api and mode in ["JSON", "STDIN_JSON"] and "--api" not in full_cmd:
             full_cmd.append("--api")
 
         logger.debug(f"Executing Ludusavi command: {full_cmd}")

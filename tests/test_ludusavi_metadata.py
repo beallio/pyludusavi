@@ -40,6 +40,20 @@ class TestLudusaviMetadata(unittest.TestCase):
         mock_execute.assert_called_with(["config", "path"], mode="TEXT")
 
     @patch("pyludusavi.core.LudusaviExecutor.execute")
+    def test_schema(self, mock_execute):
+        mock_execute.return_value = LudusaviResponse(
+            data={"schema": "ok"},
+            raw={"schema": "ok"},
+            warnings="",
+            command=["ludusavi", "schema", "--format", "json", "api-output"],
+        )
+        result = self.ludusavi.schema("api-output")
+        self.assertEqual(result, {"schema": "ok"})
+        mock_execute.assert_called_with(
+            ["schema", "--format", "json", "api-output"], mode="JSON", auto_api=False
+        )
+
+    @patch("pyludusavi.core.LudusaviExecutor.execute")
     def test_manifest_show(self, mock_execute):
         mock_execute.return_value = LudusaviResponse(
             data={"game": {}},
