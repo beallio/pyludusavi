@@ -28,6 +28,18 @@ class TestLudusaviMetadata(unittest.TestCase):
         mock_execute.assert_called_with(["--version"], mode="TEXT")
 
     @patch("pyludusavi.core.LudusaviExecutor.execute")
+    def test_config_path(self, mock_execute):
+        mock_execute.return_value = LudusaviResponse(
+            data="/path/to/config.yaml",
+            raw="/path/to/config.yaml",
+            warnings="",
+            command=["ludusavi", "config", "path"],
+        )
+        result = self.ludusavi.config_path()
+        self.assertEqual(result.data, "/path/to/config.yaml")
+        mock_execute.assert_called_with(["config", "path"], mode="TEXT")
+
+    @patch("pyludusavi.core.LudusaviExecutor.execute")
     def test_manifest_show(self, mock_execute):
         mock_execute.return_value = LudusaviResponse(
             data={"game": {}},

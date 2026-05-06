@@ -75,7 +75,7 @@ class Ludusavi:
 
     def config_path(self) -> LudusaviResponse:
         """Show the path to the Ludusavi configuration file."""
-        response = self.executor.execute(["config", "path"], mode="JSON")
+        response = self.executor.execute(["config", "path"], mode="TEXT")
         assert response is not None
         return response
 
