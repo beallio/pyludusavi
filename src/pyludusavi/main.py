@@ -1,6 +1,7 @@
 from typing import Optional, List, Dict, Literal, Any, Union
 from .discovery import find_ludusavi
 from .core import LudusaviExecutor, LudusaviResponse
+from .models import LudusaviApiOutput, ApiConfig, ApiManifest
 
 
 def _validate_mutually_exclusive(
@@ -80,18 +81,18 @@ class Ludusavi:
         assert response is not None
         return response.data
 
-    def manifest_show(self) -> LudusaviResponse:
+    def manifest_show(self) -> LudusaviResponse[ApiManifest]:
         """
         Print the content of the manifest, including any custom entries.
 
         Returns:
-            LudusaviResponse: The JSON response containing the manifest data.
+            LudusaviResponse[ApiManifest]: The JSON response containing the manifest data.
         """
         response = self.executor.execute(["manifest", "show"], mode="JSON")
         assert response is not None
         return response
 
-    def manifest_update(self, force: bool = False) -> LudusaviResponse:
+    def manifest_update(self, force: bool = False) -> LudusaviResponse[str]:
         """
         Check for any manifest updates and download if available.
         By default, does nothing if the most recent check was within the last 24 hours.
@@ -100,7 +101,7 @@ class Ludusavi:
             force: Check again even if the most recent check was within the last 24 hours.
 
         Returns:
-            LudusaviResponse: The raw text response from the update check.
+            LudusaviResponse[str]: The raw text response from the update check.
         """
         args = ["manifest", "update"]
         if force:
@@ -109,12 +110,12 @@ class Ludusavi:
         assert response is not None
         return response
 
-    def config_show(self) -> LudusaviResponse:
+    def config_show(self) -> LudusaviResponse[ApiConfig]:
         """
         Print the active configuration.
 
         Returns:
-            LudusaviResponse: The JSON response containing the current configuration.
+            LudusaviResponse[ApiConfig]: The JSON response containing the current configuration.
         """
         response = self.executor.execute(["config", "show"], mode="JSON")
         assert response is not None
@@ -154,7 +155,7 @@ class Ludusavi:
         include_disabled: bool = False,
         ask_downgrade: bool = False,
         timeout: Optional[float] = None,  # Operations default to no timeout
-    ) -> LudusaviResponse:
+    ) -> LudusaviResponse[LudusaviApiOutput]:
         """
         Back up data.
 
@@ -184,7 +185,7 @@ class Ludusavi:
             timeout: Maximum time to wait for the process.
 
         Returns:
-            LudusaviResponse: The JSON response from Ludusavi.
+            LudusaviResponse[LudusaviApiOutput]: The JSON response from Ludusavi.
         """
         _validate_mutually_exclusive("cloud_sync", cloud_sync, "no_cloud_sync", no_cloud_sync)
 
@@ -243,7 +244,7 @@ class Ludusavi:
         include_disabled: bool = False,
         ask_downgrade: bool = False,
         timeout: Optional[float] = None,
-    ) -> LudusaviResponse:
+    ) -> LudusaviResponse[LudusaviApiOutput]:
         """
         Restore data.
 
@@ -299,7 +300,7 @@ class Ludusavi:
 
     def backups_list(
         self, games: Optional[List[str]] = None, path: Optional[str] = None
-    ) -> LudusaviResponse:
+    ) -> LudusaviResponse[LudusaviApiOutput]:
         """
         Show backups.
 
@@ -328,7 +329,7 @@ class Ludusavi:
         lock: bool = False,
         unlock: bool = False,
         comment: Optional[str] = None,
-    ) -> LudusaviResponse:
+    ) -> LudusaviResponse[str]:
         """
         Edit a backup.
 
@@ -383,9 +384,10 @@ class Ludusavi:
         fuzzy: bool = False,
         disabled: bool = False,
         partial: bool = False,
-    ) -> LudusaviResponse:
+    ) -> LudusaviResponse[LudusaviApiOutput]:
         """
-        Find game titles.
+        Find games in the manifest.
+
 
         Precedence: Steam ID -> GOG ID -> Lutris ID -> exact names -> normalized names.
         Once a match is found for one of these options, Ludusavi will stop looking
@@ -454,7 +456,7 @@ class Ludusavi:
         force: bool = False,
         preview: bool = False,
         gui: bool = False,
-    ) -> LudusaviResponse:
+    ) -> LudusaviResponse[LudusaviApiOutput]:
         """
         Upload your local backups to the cloud, overwriting any existing cloud backups.
 
@@ -494,7 +496,7 @@ class Ludusavi:
         force: bool = False,
         preview: bool = False,
         gui: bool = False,
-    ) -> LudusaviResponse:
+    ) -> LudusaviResponse[LudusaviApiOutput]:
         """
         Download your cloud backups, overwriting any existing local backups.
 
@@ -540,7 +542,7 @@ class Ludusavi:
             "webdav",
         ],
         options: Optional[List[str]] = None,
-    ) -> LudusaviResponse:
+    ) -> LudusaviResponse[str]:
         """
         Configure the cloud system to use.
 
@@ -549,7 +551,7 @@ class Ludusavi:
             options: Provider-specific options.
 
         Returns:
-            LudusaviResponse: The raw text response confirming the configuration.
+            LudusaviResponse[str]: The raw text response confirming the configuration.
         """
         args = ["cloud", "set", provider]
         if options:
@@ -558,7 +560,7 @@ class Ludusavi:
         assert response is not None
         return response
 
-    def bulk_api(self, input_data: Dict[str, Any]) -> LudusaviResponse:
+    def bulk_api(self, input_data: Dict[str, Any]) -> LudusaviResponse[LudusaviApiOutput]:
         """
         Execute bulk requests using JSON input.
 
@@ -597,7 +599,7 @@ class Ludusavi:
         cloud_sync: bool = False,
         no_cloud_sync: bool = False,
         ask_downgrade: bool = False,
-    ) -> LudusaviResponse:
+    ) -> LudusaviResponse[str]:
         """
         Wrap restore/backup around game execution.
 
@@ -690,7 +692,7 @@ class Ludusavi:
         assert response is not None
         return response.data
 
-    def open_gui(self, custom_game: Optional[str] = None):
+    def open_gui(self, custom_game: Optional[str] = None) -> None:
         """
         Open the GUI.
 

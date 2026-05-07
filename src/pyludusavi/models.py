@@ -1,4 +1,4 @@
-from typing import TypedDict, Dict, List, Optional, Literal
+from typing import TypedDict, Dict, List, Optional, Literal, Any
 
 # Hybrid Policy:
 # - Top-level envelopes are Total (strict).
@@ -94,3 +94,34 @@ class LudusaviApiOutput(TypedDict):
     errors: Optional[ApiErrorDetails]
     overall: Optional[OperationStatus]
     cloud: Optional[Dict[str, Dict]]
+
+
+# --- Configuration ---
+
+
+class ApiConfig(TypedDict, total=False):
+    language: str
+    theme: str
+    customGames: List[Dict[str, Any]]
+    roots: List[Dict[str, Any]]
+    redirects: List[Dict[str, Any]]
+    backup: Dict[str, Any]
+    restore: Dict[str, Any]
+    scan: Dict[str, Any]
+    cloud: Dict[str, Any]
+    gui: Dict[str, Any]
+
+
+# --- Manifest ---
+
+
+class ApiManifestGame(TypedDict, total=False):
+    files: Optional[Dict[str, Any]]
+    registry: Optional[Dict[str, Any]]
+    steam: Optional[int]
+    gog: Optional[int]
+    lutris: Optional[str]
+
+
+class ApiManifest(TypedDict):
+    games: Dict[str, ApiManifestGame]

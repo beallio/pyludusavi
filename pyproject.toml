@@ -1,7 +1,7 @@
 [project]
 name = "pyludusavi"
 dynamic = ["version"]
-description = "Enter project description here"
+description = "A robust, type-safe Python wrapper for the Ludusavi game backup tool."
 readme = "README.md"
 requires-python = ">=3.12"
 license = { text = "MIT" }
@@ -12,8 +12,11 @@ classifiers = [
     "Development Status :: 4 - Beta",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.12",
+    "Intended Audience :: Developers",
+    "Topic :: Games/Entertainment",
+    "Topic :: System :: Archiving :: Backup",
 ]
-keywords = []
+keywords = ["ludusavi", "game-backup", "wrapper", "api", "gaming"]
 dependencies = []
 
 [project.urls]

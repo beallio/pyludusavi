@@ -1,10 +1,12 @@
 import subprocess
 import json
 import logging
-from typing import Any, Optional, Literal, Dict
+from typing import Any, Optional, Literal, Dict, TypeVar, Generic
 from dataclasses import dataclass
 
 logger = logging.getLogger(__name__)
+
+T = TypeVar("T")
 
 
 class LudusaviError(Exception):
@@ -31,10 +33,10 @@ class LudusaviContractError(LudusaviError):
 
 
 @dataclass
-class LudusaviResponse:
+class LudusaviResponse(Generic[T]):
     """Container for Ludusavi command responses."""
 
-    data: Any
+    data: T
     raw: Any
     warnings: str
     command: list[str]
