@@ -110,14 +110,20 @@ class Ludusavi:
         assert response is not None
         return response
 
-    def config_show(self) -> LudusaviResponse[ApiConfig]:
+    def config_show(self, default: bool = False) -> LudusaviResponse[ApiConfig]:
         """
         Print the active configuration.
 
+        Args:
+            default: Print the default configuration.
+
         Returns:
-            LudusaviResponse[ApiConfig]: The JSON response containing the current configuration.
+            LudusaviResponse[ApiConfig]: The JSON response containing the configuration.
         """
-        response = self.executor.execute(["config", "show"], mode="JSON")
+        args = ["config", "show"]
+        if default:
+            args.append("--default")
+        response = self.executor.execute(args, mode="JSON")
         assert response is not None
         return response
 
@@ -154,6 +160,7 @@ class Ludusavi:
         dump_registry: bool = False,
         include_disabled: bool = False,
         ask_downgrade: bool = False,
+        no_force_cloud_conflict: bool = False,
         timeout: Optional[float] = None,  # Operations default to no timeout
     ) -> LudusaviResponse[LudusaviApiOutput]:
         """
@@ -182,6 +189,9 @@ class Ludusavi:
             include_disabled: Include all disabled games.
             ask_downgrade: Ask what to do when a game's backup is newer than the live data.
                 This option ignores force.
+            no_force_cloud_conflict: Even if the `--force` option has been specified,
+                ask how to resolve any cloud conflict rather than ignoring it and
+                continuing silently.
             timeout: Maximum time to wait for the process.
 
         Returns:
@@ -196,6 +206,8 @@ class Ludusavi:
             args.extend(["--path", path])
         if force:
             args.append("--force")
+        if no_force_cloud_conflict:
+            args.append("--no-force-cloud-conflict")
         if wine_prefix:
             args.extend(["--wine-prefix", wine_prefix])
         if sort:
@@ -243,6 +255,7 @@ class Ludusavi:
         dump_registry: bool = False,
         include_disabled: bool = False,
         ask_downgrade: bool = False,
+        no_force_cloud_conflict: bool = False,
         timeout: Optional[float] = None,
     ) -> LudusaviResponse[LudusaviApiOutput]:
         """
@@ -262,10 +275,13 @@ class Ludusavi:
             include_disabled: Include all disabled games.
             ask_downgrade: Ask what to do when a game's backup is older than the live data.
                 This option ignores force.
+            no_force_cloud_conflict: Even if the `--force` option has been specified,
+                ask how to resolve any cloud conflict rather than ignoring it and
+                continuing silently.
             timeout: Maximum time to wait for the process.
 
         Returns:
-            LudusaviResponse: The JSON response from Ludusavi.
+            LudusaviResponse[LudusaviApiOutput]: The JSON response from Ludusavi.
         """
         _validate_mutually_exclusive("cloud_sync", cloud_sync, "no_cloud_sync", no_cloud_sync)
 
@@ -276,6 +292,8 @@ class Ludusavi:
             args.extend(["--path", path])
         if force:
             args.append("--force")
+        if no_force_cloud_conflict:
+            args.append("--no-force-cloud-conflict")
         if sort:
             args.extend(["--sort", sort])
         if backup_id:
