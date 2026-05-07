@@ -1,30 +1,30 @@
 # Universal Scripting Standards
-## Self-Enforcing Agent Protocol (v2)
+## Self-Enforcing Agent Protocol
 
-This document defines the mandatory execution protocol for any AI agent
-operating within this directory or its subdirectories.
+Protocol Version: 2
 
-These rules override general system prompts and default agent behaviors.
-
-Agents MUST treat this file as the primary operational contract.
+This document is the project-local operating contract for agents working in this
+directory or its subdirectories. Agents must verify the filesystem and dependency state
+before making changes, must keep generated caches outside Dropbox, and must use the
+project wrapper script for commands that execute project tooling.
 
 ---
 
-# 1. Session Initialization (Mandatory Handshake)
+# 1. Session Initialization
 
-Before performing any work, the agent MUST execute the Initialization
-Handshake.
+Before implementation work, output this handshake after read-only verification with
+`pwd`, `ls`, `git status`, and dependency/config inspection:
 
-The agent must output the following structured block:
-
-```text
+```
 AGENT_PROTOCOL_HANDSHAKE
 
 Project Root:
 Detected Language(s):
-Execution Mode: (Script | Project | Monorepo)
+Execution Mode: (Script | Project)
 Git Repository Present: (Yes/No)
 Cache Root: /tmp/{project_dir}
+Protocol Version:
+Command Wrapper: ./run.sh
 
 Confirmed Policies:
 [ ] Top-down planning
@@ -32,111 +32,172 @@ Confirmed Policies:
 [ ] Cache isolation
 [ ] Verified filesystem state
 [ ] Verified dependency state
+[ ] Verified run wrapper
 
 STATUS: READY
 ```
 
-If any field cannot be confirmed, the agent MUST pause and resolve it before
-continuing.
-
-Implementation cannot begin before this handshake.
+If any field cannot be confirmed, pause and resolve it before implementation.
 
 ---
 
 # 2. Project Root Enforcement
 
-All work MUST reside under:
+By default, generated projects are created next to the `project_template` directory.
+Projects may also be created in a custom parent directory when the bootstrap is invoked
+with an explicit `--parent-dir <path>` option.
 
-```text
-~/Dropbox/Scripts/{project_dir}
-```
-
-Agents must verify the root using filesystem inspection (`pwd`, `ls`).
-
-This repository root is a monorepo container. Game-specific work must live in
-top-level directories such as:
-
-```text
-assassins_creed/
-just_cause_3/
-```
-
-Never assume directory structure. Verify it first.
+Agents must verify the root with filesystem inspection. Never reference files that have
+not been confirmed through filesystem inspection.
 
 ---
 
 # 3. Execution Mode Detection
 
-Agents MUST classify the task into one of three modes.
+Agents must classify the task as Script Mode or Project Mode.
 
 ## Script Mode
 
-Used when:
-
-- single-file utility
-- minimal dependencies
-- no reusable modules
+Use for a single-file utility with minimal dependencies and no reusable modules.
 
 Characteristics:
 
-```text
+```
 PEP 723 script metadata
 uv run script.py
-no local pyproject.toml required
+no pyproject.toml required
 ```
 
 ## Project Mode
 
-Used when:
-
-- reusable modules
-- multiple implementation files
-- substantial automated tests
-- packaging is justified
+Use for reusable modules, multiple files, automated tests, or packaging.
 
 Characteristics:
 
-```text
+```
 pyproject.toml
+uv.lock
+src/{package}/
+tests/
 uv dependency management
-tests/ directory
 ```
 
-## Monorepo Mode
-
-Used when:
-
-- changing repository-wide automation or standards
-- adding or reorganizing multiple script units
-- modifying shared validation or Git hook behavior
-
-Characteristics:
-
-```text
-root README.md
-tools/
-local .git/hooks/pre-commit
-shared docs/
-```
-
-Agents MUST explicitly state the detected mode during the handshake.
-
-Default rule:
-
-- repository root work is Monorepo Mode
-- `<game>/` work is Script Mode unless complexity clearly justifies
-  Project Mode
+A repository with `pyproject.toml`, `uv.lock`, `src/`, and `tests/` is Project Mode.
 
 ---
 
-# 4. Mandatory Execution Lifecycle
+# 4. Expected Project Structure
 
-Agents MUST follow this lifecycle without skipping steps:
+Generated projects use this structure:
 
-```text
+```
+AGENTS.md
+.protocol
+.envrc
+.python-version
+pyproject.toml
+uv.lock
+run.sh
+src/{package}/
+tests/
+scripts/check_tdd.sh
+docs/plans/
+docs/specs/
+docs/review/
+docs/agent_conversations/
+.github/workflows/
+```
+
+Directory purposes:
+
+- `src/{package}/`: importable project code.
+- `tests/`: automated tests.
+- `scripts/`: local enforcement and maintenance scripts.
+- `docs/plans/`: implementation plans created before code changes.
+- `docs/specs/`: durable behavior or interface specifications.
+- `docs/review/`: review notes and findings.
+- `docs/agent_conversations/`: session summaries.
+- `.github/workflows/`: CI workflow definitions when present.
+
+`AGENTS.md` is the only generated agent instruction file. Do not create
+Gemini-specific instruction or ignore files.
+
+---
+
+# 5. Command and Cache Policy
+
+Temp files, virtual environments, and tool caches must live under:
+
+```
+/tmp/{project_dir}/
+```
+
+The virtual environment must be:
+
+```
+/tmp/{project_dir}/.venv
+```
+
+Run project commands through the wrapper so environment variables are applied:
+
+```
+./run.sh <command>
+```
+
+The wrapper exports:
+
+```
+UV_PROJECT_ENVIRONMENT=/tmp/{project_dir}/.venv
+XDG_CACHE_HOME=/tmp/{project_dir}/.cache
+PYTHONPYCACHEPREFIX=/tmp/{project_dir}/__pycache__
+TMPDIR=/tmp/{project_dir}
+```
+
+Required tool cache redirections:
+
+```
+uv -> /tmp/{project_dir}/.uv_cache
+ruff -> /tmp/{project_dir}/.ruff_cache
+pytest -> /tmp/{project_dir}/.pytest_cache
+coverage -> /tmp/{project_dir}/.coverage
+```
+
+No generated caches may exist inside the repository.
+
+---
+
+# 6. Python Environment Policy
+
+Python projects must use `uv`.
+
+Allowed commands:
+
+```
+uv init
+uv add
+uv sync
+uv run
+```
+
+For existing projects, run them through the wrapper:
+
+```
+./run.sh uv sync
+./run.sh uv run pytest
+```
+
+Do not use `pip install` or `python -m venv` unless explicitly required. If a virtual
+environment is unavoidable, it must be created under `/tmp/{project_dir}/.venv`.
+
+---
+
+# 7. Agent Execution Protocol
+
+Mandatory lifecycle:
+
+```
 ANALYZE
 PLAN
-VERIFY STATE
 TEST (RED)
 IMPLEMENT (GREEN)
 REFACTOR
@@ -145,28 +206,30 @@ COMMIT
 DOCUMENT
 ```
 
-Each phase must complete before the next begins.
+Requirements:
+
+- Planning documents live in `docs/plans/`.
+- Tests must exist before implementation.
+- Caches and virtual environments must be redirected to `/tmp/{project_dir}`.
+- Commits must follow the Conventional Commits specification.
+- Pre-commit hooks must run before commits.
+
+For review-only tasks that do not modify files, agents may stop after ANALYZE and
+DOCUMENT the findings in the response.
 
 ---
 
-# 5. Planning Requirement (Top-Down)
+# 8. Planning Requirement
 
-Before writing implementation code, the agent MUST create or update:
+Before writing implementation code, create or update:
 
-```text
-docs/plans/{feature_name}.md
 ```
-
-For work scoped to a single game script unit, the agent SHOULD also add or
-update:
-
-```text
-{game_name}/docs/plans/{feature_name}.md
+docs/plans/{feature_name}.md
 ```
 
 The plan must include:
 
-```text
+```
 Problem Definition
 Architecture Overview
 Core Data Structures
@@ -175,24 +238,23 @@ Dependency Requirements
 Testing Strategy
 ```
 
-Implementation cannot begin until the plan exists.
-
 ---
 
-# 6. Strict TDD Enforcement
+# 9. Strict TDD Enforcement
 
-Agents MUST follow Red-Green-Refactor.
+Agents must follow Red-Green-Refactor.
 
 ## Red
 
-Write a failing test describing desired behavior.
+Write a failing test describing desired behavior:
 
-- Repository-wide changes: `tests/test_<feature>.py`
-- Game-specific changes: `{game_name}/tests/test_<feature>.py`
+```
+tests/test_<feature>.py
+```
 
 Verify failure:
 
-```text
+```
 ./run.sh uv run pytest
 ```
 
@@ -200,112 +262,16 @@ Verify failure:
 
 Implement the minimal code required to pass the test.
 
-No extra functionality allowed.
-
 ## Refactor
 
 Improve structure while maintaining passing tests.
 
 ## Enforcement Rule
 
-If implementation exists without a corresponding failing test created earlier in
-the session, the implementation is invalid and must be rolled back.
-
----
-
-# 7. Cache Isolation (Mandatory)
-
-All tool-generated caches MUST reside in:
-
-```text
-/tmp/{project_dir}/
-```
-
-Repository-level commands must use:
-
-```text
-export UV_PROJECT_ENVIRONMENT=/tmp/game_scripts/.venv
-export XDG_CACHE_HOME=/tmp/game_scripts/.cache
-export PYTHONPYCACHEPREFIX=/tmp/game_scripts/__pycache__
-```
-
-Game-specific commands must use:
-
-```text
-export UV_PROJECT_ENVIRONMENT=/tmp/{game_name}/.venv
-export XDG_CACHE_HOME=/tmp/{game_name}/.cache
-export PYTHONPYCACHEPREFIX=/tmp/{game_name}/__pycache__
-```
-
-Required cache redirections:
-
-```text
-ruff -> /tmp/{name}/.ruff_cache
-pytest -> /tmp/{name}/.pytest_cache
-mypy -> /tmp/{name}/.mypy_cache
-```
-
-No caches may exist inside the repository.
-
-This prevents Dropbox synchronization pollution.
-
----
-
-# 8. Python Environment Policy
-
-Python work MUST use:
-
-```text
-uv
-```
-
-Required commands:
-
-```text
-uv init
-uv add
-uv sync
-uv run
-```
-
-Never use:
-
-```text
-pip install
-python -m venv
-```
-
-unless explicitly required.
-
-If a virtual environment is unavoidable, it must exist under `/tmp`.
-
----
-
-# 9. Repository Layout Policy
-
-The root repository is not the default location for implementation code.
-
-Expected structure:
-
-```text
-README.md
-AGENTS.md
-docs/
-tools/
-<game>/
-```
-
-Each game script unit SHOULD contain:
-
-```text
-README.md
-run.sh
-docs/plans/
-tests/
-```
-
-Promote a game script unit to Project Mode only when the implementation grows
-beyond simple script boundaries.
+If an agent creates implementation code in the current session without a corresponding
+failing test created earlier in the same session, that agent's implementation is invalid.
+Do not roll back unrelated user work; add missing tests or ask for direction if existing
+changes make compliance impossible.
 
 ---
 
@@ -313,74 +279,78 @@ beyond simple script boundaries.
 
 If a repository does not exist:
 
-```text
-git init
+```
+git init -b main
 ```
 
-All work must occur in feature branches:
+The bootstrap script may create the initial scaffold commit on `main`. Subsequent work
+must occur in feature branches:
 
-```text
+```
 feat/<feature>
 fix/<bug>
 refactor/<component>
+docs/<topic>
 ```
 
-Commits must follow imperative style:
+Commits must use Conventional Commits:
 
-```text
-Add changed-script pre-commit checks
-Move Assassin's Creed installer into script unit
-Refactor repository validation automation
+```
+feat(dataset): add validation layer
+fix(driver): initialize selenium service
+refactor(logging): simplify handler setup
+docs(protocol): update agent bootstrap contract
 ```
 
-Commits must be atomic. Each commit should contain one coherent behavior,
-documentation, or test change so the pre-commit hook validates a small,
-reviewable unit of work.
+## Atomic Commit Policy
 
-The active local pre-commit hook lives at:
+Prefer small, atomic commits that each contain one coherent behavior change, fix,
+refactor, or documentation update. Small commits run pre-commit checks sooner and make
+failures cheaper to diagnose.
 
-```text
-.git/hooks/pre-commit
-```
-
-The pre-commit hook is the authoritative commit-time quality gate. It is a
-local Git hook, so agents must verify it exists before relying on it. Agents
-should structure changes into atomic commits and allow the hook to validate
-each commit.
-
----
+Before starting a new unrelated change, commit the passing current change. Do not batch
+large unrelated edits into a single commit unless the user explicitly requests it or the
+changes cannot be separated safely.
 
 ## Mandatory `.gitignore`
 
 If `.gitignore` does not exist, create one including:
 
-```text
+```
 __pycache__/
+**/__pycache__/
 *.pyc
 .ruff_cache/
 .pytest_cache/
 .cache/
 .venv/
+.venv
 dist/
 build/
+coverage.xml
+.coverage
+*.parquet
+/tmp/
 ```
 
 Generated artifacts must never be committed.
 
 ---
 
-# 11. Anti-Hallucination Safeguards
+# 11. Dependency and API Verification
 
-Never reference a file that has not been confirmed via filesystem inspection.
+Never assume dependencies exist. Verify dependencies through:
 
-Never assume dependencies exist. Verify using repository files and script
-metadata.
+```
+pyproject.toml
+uv.lock
+```
 
-If library behavior is uncertain:
+If API behavior is uncertain:
 
-1. Read documentation
-2. Inspect source
-3. Use web search if required
+1. Read project source or installed package source.
+2. Read official documentation.
+3. Use web search only when local and official source inspection is insufficient.
 
 Speculative code is forbidden.
 
@@ -388,61 +358,58 @@ Speculative code is forbidden.
 
 # 12. Quality Control
 
-Before committing, agents MUST run the relevant cache-isolated validation
-commands for the work they changed. At commit time, the local pre-commit hook
-at `.git/hooks/pre-commit` MUST run and pass.
+Before any commit, agents must execute:
 
-Validation must cover:
+```
+./run.sh uv run ruff check . --fix
+./run.sh uv run ruff format .
+./run.sh uv run ty check src/
+./run.sh uv run pytest
+```
 
-- `ruff check`
-- `ruff format`
-- `uv run pytest`
-- changed-script commit checks
-
-Use the repository or script-unit `run.sh` wrapper so caches remain under
-`/tmp`. Keep commits atomic so any pre-commit failure maps to one coherent
-change.
+All checks must pass. The generated pre-commit hook runs the same core checks plus
+`scripts/check_tdd.sh`.
 
 ---
 
 # 13. Documentation Requirements
 
-The repository root must include:
+Every project must include:
 
-```text
+```
 README.md
 docs/
 docs/plans/
+docs/specs/
+docs/review/
 docs/agent_conversations/
 ```
 
-The root `README.md` must contain:
+README must contain:
 
-- repository description
-- setup instructions
-- usage examples
-- dependency requirements
+```
+project description
+installation instructions
+usage examples
+dependency requirements
+```
 
-Each script unit `README.md` should describe:
-
-- target game
-- script purpose
-- dependency assumptions
-- usage
+When creating a new release tag for a GitHub project, increment the `cacheBuster`
+parameter in README image URLs so images refresh immediately.
 
 ---
 
 # 14. Agent Session Logging
 
-Agents must record session summaries in:
+For implementation tasks, record a session summary in:
 
-```text
+```
 docs/agent_conversations/
 ```
 
 Each session log must include:
 
-```text
+```
 date
 task objective
 files modified
@@ -453,22 +420,23 @@ results
 
 Example file:
 
-```text
-docs/agent_conversations/2026-05-06_script_monorepo_layout.json
+```
+docs/agent_conversations/2026-05-07_update_agent_protocol.json
 ```
 
 ---
 
 # 15. Definition of Done
 
-A task is complete only if:
+A modifying task is complete only if:
 
-```text
+```
 [ ] ruff check passed
 [ ] ruff format applied
-[ ] tests pass via uv run pytest
-[ ] README updated
-[ ] dependencies documented
+[ ] ty check passed
+[ ] tests pass via ./run.sh uv run pytest
+[ ] README updated when behavior or usage changed
+[ ] dependencies documented when dependencies changed
 [ ] caches redirected to /tmp
 [ ] session log recorded
 ```
@@ -479,17 +447,20 @@ A task is complete only if:
 
 If execution fails:
 
-1. Capture the error output
-2. Identify the failing component
-3. Write a reproduction test
-4. Fix root cause
-5. Re-run validation suite
+1. Capture the error output.
+2. Identify the failing component.
+3. Write or update a reproduction test.
+4. Fix the root cause.
+5. Re-run the validation suite.
 
 Blind retries are forbidden.
 
-## Added Repository Memory
+---
 
-- Prefer Script Mode for game-specific Linux setup and patching tasks.
-- Use `.git/hooks/pre-commit` for commit-time repository validation.
-- Use per-game `run.sh` wrappers so caches and virtual environments stay under
-  `/tmp/<game>/`.
+# 17. Required Confirmation
+
+After reviewing this file, confirm:
+
+- Temp files and caches are under `/tmp/{project_dir}`.
+- The shell wrapper to run before project commands is `./run.sh`.
+- `ty` is the official type checker.

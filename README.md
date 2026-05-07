@@ -10,12 +10,30 @@ A robust, type-safe Python wrapper for the [Ludusavi](https://github.com/mtkenne
 - **Dual-Mode Execution**: Transparently handles binary vs. Flatpak command prefixing.
 - **TDD-Backed**: High-quality implementation with an extensive regression suite.
 
+## Setup
+
+For local development, use the project wrapper so virtual environments and tool
+caches stay outside Dropbox:
+
+```bash
+source .envrc
+./run.sh uv sync
+```
+
+Run validation through the same wrapper:
+
+```bash
+./run.sh uv run ruff check .
+./run.sh uv run ty check src/
+./run.sh uv run pytest
+```
+
 ## Installation
+
+Use `uv` when adding the package to another Python project:
 
 ```bash
 uv add pyludusavi
-# or
-pip install pyludusavi
 ```
 
 ## Quick Start
@@ -105,6 +123,13 @@ lud.wrap(["steam", "-applaunch", "292030"], infer="steam", force=True)
 - `LudusaviNotFoundError`: Raised if the executable or Flatpak isn't found.
 - `LudusaviExecutionError`: Raised if the process exits with a non-zero code.
 - `LudusaviContractError`: Raised if the CLI output is malformed or non-JSON when expected.
+
+## Dependency Requirements
+
+- Python 3.12+
+- uv
+- Ludusavi v0.31.0+
+- pytest, pytest-cov, ruff, and ty for local development
 
 ## License
 

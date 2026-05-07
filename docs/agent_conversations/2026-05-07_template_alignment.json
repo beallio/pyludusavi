@@ -1,0 +1,40 @@
+{
+  "date": "2026-05-07",
+  "task_objective": "Align pyludusavi repository workflow, protocol, and documentation with /home/beallio/Dropbox/Scripts/project_template.",
+  "files_modified": [
+    ".geminiignore",
+    ".git/hooks/pre-commit",
+    ".gitignore",
+    ".pre-commit-config.yaml",
+    "AGENTS.md",
+    "GEMINI.md",
+    "README.md",
+    "docs/agent_conversations/2026-05-07_template_alignment.json",
+    "docs/plans/template_alignment.md",
+    "docs/review/.gitkeep",
+    "scripts/check_tdd.sh",
+    "tests/test_protocol.py"
+  ],
+  "tests_added": [
+    "protocol contract assertions for current project_template AGENTS.md expectations",
+    "canonical AGENTS.md-only project instruction assertion",
+    "local pre-commit hook wrapper-command assertions",
+    "template documentation directory assertions"
+  ],
+  "design_decisions": [
+    "Replaced the older monorepo/game-script AGENTS.md with the current generated-project protocol.",
+    "Kept .git/hooks/pre-commit as the authoritative local commit-time gate while making it invoke tooling through ./run.sh.",
+    "Removed Gemini-specific project instruction files from the canonical project surface.",
+    "Removed the stale tracked pre-commit config because the template uses a local Git hook instead.",
+    "Tracked docs/review with a .gitkeep file so protocol tests pass in fresh checkouts."
+  ],
+  "results": [
+    "Focused protocol tests failed before implementation and passed after alignment.",
+    "./run.sh uv run ruff check . --fix passed",
+    "./run.sh uv run ruff format . left 15 files unchanged",
+    "./run.sh uv run ty check src/ passed",
+    "./run.sh uv run pytest passed with 50 tests",
+    "./run.sh scripts/check_tdd.sh passed",
+    "Repo-local __pycache__ directories were removed"
+  ]
+}
