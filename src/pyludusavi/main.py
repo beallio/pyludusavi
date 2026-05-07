@@ -3,6 +3,13 @@ from .discovery import find_ludusavi
 from .core import LudusaviExecutor, LudusaviResponse
 
 
+def _validate_mutually_exclusive(
+    first_name: str, first_value: bool, second_name: str, second_value: bool
+) -> None:
+    if first_value and second_value:
+        raise ValueError(f"`{first_name}` and `{second_name}` cannot both be enabled")
+
+
 class Ludusavi:
     """
     The primary public API for Ludusavi.
@@ -13,16 +20,21 @@ class Ludusavi:
         explicit_path: Optional[str] = None,
         config_dir: Optional[str] = None,
         no_manifest_update: bool = False,
+        flatpak_id: Optional[str] = None,
     ):
         """
         Initialize the Ludusavi wrapper.
 
         Args:
-            explicit_path: Path to the ludusavi binary or flatpak id.
+            explicit_path: Path to the Ludusavi binary.
             config_dir: Optional --config directory for Ludusavi.
             no_manifest_update: If True, appends --no-manifest-update to all calls.
+            flatpak_id: Optional Flatpak app ID to run explicitly.
         """
-        self.command_prefix = find_ludusavi(explicit_path=explicit_path)
+        self.command_prefix = find_ludusavi(
+            explicit_path=explicit_path,
+            explicit_flatpak_id=flatpak_id,
+        )
 
         # Add global options to prefix if they apply to the binary call
         # Note: --config and --no-manifest-update are global flags
@@ -174,6 +186,8 @@ class Ludusavi:
         Returns:
             LudusaviResponse: The JSON response from Ludusavi.
         """
+        _validate_mutually_exclusive("cloud_sync", cloud_sync, "no_cloud_sync", no_cloud_sync)
+
         args = ["backup"]
         if preview:
             args.append("--preview")
@@ -252,6 +266,8 @@ class Ludusavi:
         Returns:
             LudusaviResponse: The JSON response from Ludusavi.
         """
+        _validate_mutually_exclusive("cloud_sync", cloud_sync, "no_cloud_sync", no_cloud_sync)
+
         args = ["restore"]
         if preview:
             args.append("--preview")
@@ -332,6 +348,8 @@ class Ludusavi:
         Returns:
             LudusaviResponse: The raw text response confirming the edit.
         """
+        _validate_mutually_exclusive("lock", lock, "unlock", unlock)
+
         args = ["backups", "edit"]
         if path:
             args.extend(["--path", path])
@@ -428,25 +446,83 @@ class Ludusavi:
         assert response is not None
         return response
 
-    def cloud_upload(self) -> LudusaviResponse:
+    def cloud_upload(
+        self,
+        games: Optional[List[str]] = None,
+        local: Optional[str] = None,
+        cloud: Optional[str] = None,
+        force: bool = False,
+        preview: bool = False,
+        gui: bool = False,
+    ) -> LudusaviResponse:
         """
         Upload your local backups to the cloud, overwriting any existing cloud backups.
+
+        Args:
+            games: Only sync these specific games.
+            local: Local folder path for backups.
+            cloud: Cloud folder path for backups.
+            force: Don't ask for confirmation.
+            preview: Check what would change, but don't actually apply the changes.
+            gui: Use GUI dialogs for prompts and some information.
 
         Returns:
             LudusaviResponse: The JSON response confirming the upload.
         """
-        response = self.executor.execute(["cloud", "upload"], mode="JSON")
+        args = ["cloud", "upload"]
+        if local:
+            args.extend(["--local", local])
+        if cloud:
+            args.extend(["--cloud", cloud])
+        if force:
+            args.append("--force")
+        if preview:
+            args.append("--preview")
+        if gui:
+            args.append("--gui")
+        if games:
+            args.extend(games)
+        response = self.executor.execute(args, mode="JSON")
         assert response is not None
         return response
 
-    def cloud_download(self) -> LudusaviResponse:
+    def cloud_download(
+        self,
+        games: Optional[List[str]] = None,
+        local: Optional[str] = None,
+        cloud: Optional[str] = None,
+        force: bool = False,
+        preview: bool = False,
+        gui: bool = False,
+    ) -> LudusaviResponse:
         """
         Download your cloud backups, overwriting any existing local backups.
+
+        Args:
+            games: Only sync these specific games.
+            local: Local folder path for backups.
+            cloud: Cloud folder path for backups.
+            force: Don't ask for confirmation.
+            preview: Check what would change, but don't actually apply the changes.
+            gui: Use GUI dialogs for prompts and some information.
 
         Returns:
             LudusaviResponse: The JSON response confirming the download.
         """
-        response = self.executor.execute(["cloud", "download"], mode="JSON")
+        args = ["cloud", "download"]
+        if local:
+            args.extend(["--local", local])
+        if cloud:
+            args.extend(["--cloud", cloud])
+        if force:
+            args.append("--force")
+        if preview:
+            args.append("--preview")
+        if gui:
+            args.append("--gui")
+        if games:
+            args.extend(games)
+        response = self.executor.execute(args, mode="JSON")
         assert response is not None
         return response
 
@@ -499,18 +575,101 @@ class Ludusavi:
         assert response is not None
         return response
 
-    def wrap(self, command: List[str]) -> LudusaviResponse:
+    def wrap(
+        self,
+        command: List[str],
+        *,
+        name: Optional[str] = None,
+        infer: Optional[Literal["heroic", "lutris", "steam"]] = None,
+        force: bool = False,
+        force_backup: bool = False,
+        force_restore: bool = False,
+        no_backup: bool = False,
+        no_restore: bool = False,
+        no_force_cloud_conflict: bool = False,
+        gui: bool = False,
+        path: Optional[str] = None,
+        format: Optional[Literal["simple", "zip"]] = None,
+        compression: Optional[Literal["none", "deflate", "bzip2", "zstd"]] = None,
+        compression_level: Optional[int] = None,
+        full_limit: Optional[int] = None,
+        differential_limit: Optional[int] = None,
+        cloud_sync: bool = False,
+        no_cloud_sync: bool = False,
+        ask_downgrade: bool = False,
+    ) -> LudusaviResponse:
         """
         Wrap restore/backup around game execution.
 
         Args:
             command: Commands to launch the game.
-                Example: `wrap(["./game.exe", "--windowed"])`
+                Example: `wrap(["./game.exe", "--windowed"], name="Game")`
+            name: Directly set game name as known to Ludusavi.
+            infer: Infer game name from commands based on launcher type.
+            force: Don't ask for any confirmation.
+            force_backup: Don't ask for confirmation when backing up.
+            force_restore: Don't ask for confirmation when restoring.
+            no_backup: Don't back up after closing the game.
+            no_restore: Don't restore before launching the game.
+            no_force_cloud_conflict: Ask how to resolve cloud conflicts even with force enabled.
+            gui: Show a GUI notification during restore/backup.
+            path: Directory in which to find/store backups.
+            format: Format in which to store new backups.
+            compression: Compression method to use for new zip backups.
+            compression_level: Compression level to use for new zip backups.
+            full_limit: Maximum number of full backups to retain per game.
+            differential_limit: Maximum number of differential backups to retain per full backup.
+            cloud_sync: Upload any changes to the cloud when the backup is complete.
+            no_cloud_sync: Don't perform any cloud checks or synchronization.
+            ask_downgrade: Ask what to do when a backup is older/newer than live data.
 
         Returns:
             LudusaviResponse: The raw text response confirming the wrap operation.
         """
-        args = ["wrap", "--"] + command
+        if bool(name) == bool(infer):
+            raise ValueError("Exactly one of `name` or `infer` must be provided")
+        _validate_mutually_exclusive("cloud_sync", cloud_sync, "no_cloud_sync", no_cloud_sync)
+
+        args = ["wrap"]
+        if name:
+            args.extend(["--name", name])
+        if infer:
+            args.extend(["--infer", infer])
+        if force:
+            args.append("--force")
+        if force_backup:
+            args.append("--force-backup")
+        if force_restore:
+            args.append("--force-restore")
+        if no_backup:
+            args.append("--no-backup")
+        if no_restore:
+            args.append("--no-restore")
+        if no_force_cloud_conflict:
+            args.append("--no-force-cloud-conflict")
+        if gui:
+            args.append("--gui")
+        if path:
+            args.extend(["--path", path])
+        if format:
+            args.extend(["--format", format])
+        if compression:
+            args.extend(["--compression", compression])
+        if compression_level is not None:
+            args.extend(["--compression-level", str(compression_level)])
+        if full_limit is not None:
+            args.extend(["--full-limit", str(full_limit)])
+        if differential_limit is not None:
+            args.extend(["--differential-limit", str(differential_limit)])
+        if cloud_sync:
+            args.append("--cloud-sync")
+        if no_cloud_sync:
+            args.append("--no-cloud-sync")
+        if ask_downgrade:
+            args.append("--ask-downgrade")
+
+        args.append("--")
+        args.extend(command)
         response = self.executor.execute(args, mode="TEXT")
         assert response is not None
         return response

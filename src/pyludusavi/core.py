@@ -50,7 +50,7 @@ class LudusaviExecutor:
         self,
         args: list[str],
         mode: Literal["JSON", "TEXT", "SPAWN", "STDIN_JSON"] = "JSON",
-        input_data: Optional[Dict] = None,
+        input_data: Optional[Any] = None,
         timeout: Optional[float] = 30.0,
         env: Optional[Dict[str, str]] = None,
         auto_api: bool = True,
@@ -82,7 +82,7 @@ class LudusaviExecutor:
             return None
 
         stdin_content = None
-        if mode == "STDIN_JSON" and input_data:
+        if mode == "STDIN_JSON" and input_data is not None:
             stdin_content = json.dumps(input_data)
 
         try:

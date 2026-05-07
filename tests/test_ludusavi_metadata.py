@@ -27,6 +27,19 @@ class TestLudusaviMetadata(unittest.TestCase):
         self.assertEqual(version, "ludusavi 0.31.0")
         mock_execute.assert_called_with(["--version"], mode="TEXT")
 
+    def test_init_accepts_flatpak_id(self):
+        self.patcher.stop()
+        with patch("pyludusavi.main.find_ludusavi") as mock_find:
+            mock_find.return_value = ["flatpak", "run", "com.github.mtkennerly.ludusavi"]
+            Ludusavi(flatpak_id="com.github.mtkennerly.ludusavi")
+            mock_find.assert_called_once_with(
+                explicit_path=None,
+                explicit_flatpak_id="com.github.mtkennerly.ludusavi",
+            )
+        self.patcher = patch("pyludusavi.main.find_ludusavi")
+        self.mock_find = self.patcher.start()
+        self.mock_find.return_value = ["ludusavi"]
+
     @patch("pyludusavi.core.LudusaviExecutor.execute")
     def test_config_path(self, mock_execute):
         mock_execute.return_value = LudusaviResponse(

@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch
 from pyludusavi.core import LudusaviResponse
-from pyludusavi.main import Ludusavi
+from pyludusavi.main import Ludusavi, _validate_mutually_exclusive
 
 
 class TestLudusaviData(unittest.TestCase):
@@ -30,6 +30,12 @@ class TestLudusaviData(unittest.TestCase):
         )
 
     @patch("pyludusavi.core.LudusaviExecutor.execute")
+    def test_backup_rejects_cloud_sync_conflict(self, mock_execute):
+        with self.assertRaises(ValueError):
+            self.ludusavi.backup(cloud_sync=True, no_cloud_sync=True)
+        mock_execute.assert_not_called()
+
+    @patch("pyludusavi.core.LudusaviExecutor.execute")
     def test_backups_list(self, mock_execute):
         mock_execute.return_value = LudusaviResponse(data={}, raw={}, warnings="", command=[])
         self.ludusavi.backups_list(path="/custom/path")
@@ -44,3 +50,19 @@ class TestLudusaviData(unittest.TestCase):
         mock_execute.assert_called_with(
             ["backups", "edit", "--comment", "verified", "Witcher 3"], mode="TEXT"
         )
+
+    @patch("pyludusavi.core.LudusaviExecutor.execute")
+    def test_restore_rejects_cloud_sync_conflict(self, mock_execute):
+        with self.assertRaises(ValueError):
+            self.ludusavi.restore(cloud_sync=True, no_cloud_sync=True)
+        mock_execute.assert_not_called()
+
+    @patch("pyludusavi.core.LudusaviExecutor.execute")
+    def test_backups_edit_rejects_lock_conflict(self, mock_execute):
+        with self.assertRaises(ValueError):
+            self.ludusavi.backups_edit(game="Witcher 3", lock=True, unlock=True)
+        mock_execute.assert_not_called()
+
+    def test_validate_mutually_exclusive_rejects_conflict(self):
+        with self.assertRaises(ValueError):
+            _validate_mutually_exclusive("first", True, "second", True)

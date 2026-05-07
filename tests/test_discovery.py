@@ -42,6 +42,32 @@ class TestDiscovery(unittest.TestCase):
         )
 
     @patch("shutil.which")
+    @patch("subprocess.run")
+    def test_find_by_explicit_flatpak_id(self, mock_run, mock_which):
+        mock_which.return_value = "/usr/bin/flatpak"
+        mock_run.return_value = MagicMock(returncode=0)
+
+        result = find_ludusavi(explicit_flatpak_id="com.github.mtkennerly.ludusavi")
+
+        self.assertEqual(result, ["flatpak", "run", "com.github.mtkennerly.ludusavi"])
+        mock_which.assert_called_once_with("flatpak")
+        mock_run.assert_called_with(
+            ["flatpak", "run", "com.github.mtkennerly.ludusavi", "--version"],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+
+    @patch("shutil.which")
+    @patch("subprocess.run")
+    def test_explicit_flatpak_id_not_found_raises_error(self, mock_run, mock_which):
+        mock_which.return_value = "/usr/bin/flatpak"
+        mock_run.return_value = MagicMock(returncode=1)
+
+        with self.assertRaises(LudusaviNotFoundError):
+            find_ludusavi(explicit_flatpak_id="com.github.mtkennerly.ludusavi")
+
+    @patch("shutil.which")
     def test_not_found_raises_error(self, mock_which):
         mock_which.return_value = None
         with self.assertRaises(LudusaviNotFoundError):

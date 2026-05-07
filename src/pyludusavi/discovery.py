@@ -10,15 +10,18 @@ class LudusaviNotFoundError(Exception):
 
 
 def find_ludusavi(
-    explicit_path: Optional[str] = None, flatpak_id: str = "com.github.mtkennerly.ludusavi"
+    explicit_path: Optional[str] = None,
+    explicit_flatpak_id: Optional[str] = None,
+    flatpak_id: str = "com.github.mtkennerly.ludusavi",
 ) -> list[str]:
     """
     Find the Ludusavi executable or Flatpak.
 
     Precedence:
     1. Explicit path.
-    2. PATH lookup.
-    3. Flatpak ID lookup.
+    2. Explicit Flatpak ID.
+    3. PATH lookup.
+    4. Default Flatpak ID lookup.
 
     Returns:
         list[str]: The command prefix to use for calling Ludusavi.
@@ -34,13 +37,22 @@ def find_ludusavi(
             f"Explicitly provided Ludusavi path not found or invalid: {explicit_path}"
         )
 
-    # 2. PATH lookup
+    # 2. Explicit Flatpak ID
+    if explicit_flatpak_id:
+        prefix = ["flatpak", "run", explicit_flatpak_id]
+        if shutil.which("flatpak") and _verify(prefix):
+            return prefix
+        raise LudusaviNotFoundError(
+            f"Explicitly provided Ludusavi Flatpak ID not found or invalid: {explicit_flatpak_id}"
+        )
+
+    # 3. PATH lookup
     path_lookup = shutil.which("ludusavi")
     if path_lookup:
         if _verify([path_lookup]):
             return [path_lookup]
 
-    # 3. Flatpak ID lookup
+    # 4. Flatpak ID lookup
     flatpak_lookup = shutil.which("flatpak")
     if flatpak_lookup:
         prefix = ["flatpak", "run", flatpak_id]
