@@ -39,3 +39,25 @@ class TestAlias(unittest.TestCase):
         self.assertEqual(len(parsed_data["customGames"]), 1)
         self.assertEqual(parsed_data["customGames"][0]["name"], "My Game")
         self.assertEqual(parsed_data["customGames"][0]["alias"], "Official Game")
+
+    @patch("pyludusavi.main.Ludusavi.config_show")
+    def test_get_game_alias_found(self, mock_show):
+        mock_show.return_value = LudusaviResponse(
+            data={"customGames": [{"name": "My Custom Name", "alias": "The Witcher 3"}]},
+            raw={},
+            warnings="",
+            command=[],
+        )
+        alias = self.ludusavi.get_game_alias("My Custom Name")
+        self.assertEqual(alias, "The Witcher 3")
+
+    @patch("pyludusavi.main.Ludusavi.config_show")
+    def test_get_game_alias_not_found(self, mock_show):
+        mock_show.return_value = LudusaviResponse(
+            data={"customGames": []},
+            raw={},
+            warnings="",
+            command=[],
+        )
+        alias = self.ludusavi.get_game_alias("Nonexistent")
+        self.assertIsNone(alias)

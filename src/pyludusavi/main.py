@@ -577,3 +577,19 @@ class Ludusavi:
 
         with open(path, "w", encoding="utf-8") as f:
             json.dump(config, f, indent=2)
+
+    def get_game_alias(self, name: str) -> Optional[str]:
+        """
+        Get the alias for a game name from the Ludusavi configuration.
+
+        Args:
+            name: The custom name of the game to look up.
+
+        Returns:
+            Optional[str]: The official title (alias) if found, otherwise None.
+        """
+        config = self.config_show().data
+        for game in config.get("customGames", []):
+            if game.get("name") == name:
+                return game.get("alias")
+        return None
