@@ -4,7 +4,7 @@ A robust, type-safe Python wrapper for the [Ludusavi](https://github.com/mtkenne
 
 ## Features
 
-- **100% CLI Coverage**: Supports all 16+ subcommands and 50+ flags.
+- **Broad CLI Coverage**: Supports the core Ludusavi subcommands and commonly used flags.
 - **Linux-First**: Native support for both local binaries and Flatpak.
 - **Type-Safe**: Comprehensive `TypedDict` models for all JSON outputs (Python 3.12+).
 - **Dual-Mode Execution**: Transparently handles binary vs. Flatpak command prefixing.
@@ -56,10 +56,11 @@ result = lud.find(games=["Witcher"], fuzzy=True)
 ### Advanced Usage
 
 #### Flatpak Support
-If you have Ludusavi installed via Flatpak, `pyludusavi` detects it automatically. You can also specify a custom path or ID:
+If you have Ludusavi installed via Flatpak, `pyludusavi` detects it automatically. You can also specify a custom binary path or Flatpak ID:
 
 ```python
-lud = Ludusavi(explicit_path="com.github.mtkennerly.ludusavi")
+lud = Ludusavi(explicit_path="/usr/bin/ludusavi")
+lud = Ludusavi(flatpak_id="com.github.mtkennerly.ludusavi")
 ```
 
 #### Custom Config Directory
@@ -79,6 +80,25 @@ payload = {
 }
 lud.bulk_api(payload)
 ```
+
+#### Cloud Sync
+Use the upload/download helpers with the same common options exposed by the CLI.
+
+```python
+lud.cloud_upload(games=["The Witcher 3"], local="/backups", cloud="/cloud", preview=True)
+lud.cloud_download(games=["The Witcher 3"], force=True)
+```
+
+#### Wrap Game Launch
+Ludusavi requires either a direct game name or launcher inference when wrapping a command.
+
+```python
+lud.wrap(["./game.exe", "--windowed"], name="The Witcher 3")
+lud.wrap(["steam", "-applaunch", "292030"], infer="steam", force=True)
+```
+
+#### Game Aliases
+`add_game_alias()` updates Ludusavi's `customGames` configuration using only the Python standard library. It writes the updated config as JSON, which Ludusavi can read as YAML, but this does not preserve existing comments or formatting in `config.yaml`.
 
 ## Error Handling
 

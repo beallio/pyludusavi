@@ -188,30 +188,29 @@ the authoritative commit-time quality gate.
   - Dependency state is represented by `pyproject.toml` and `uv.lock`.
   - Commands must use `./run.sh` to keep caches under `/tmp/pyludusavi`.
 
-- [ ] **Task 2.3: Verify branch state**
+- [x] **Task 2.3: Verify branch state**
   - Confirm current branch.
-  - Create or switch to an appropriate feature/fix branch before implementation
-    if requested.
+  - Created and used `fix/pyludusavi-review-findings`.
 
-- [ ] **Task 2.4: Verify commit-time validation**
+- [x] **Task 2.4: Verify commit-time validation**
   - Confirm `.git/hooks/pre-commit` exists and is executable.
   - Plan atomic commits so each hook run validates one coherent change.
 
 ### Phase 3: Test (RED)
 
-- [ ] **Task 3.1: Add executor regression tests**
+- [x] **Task 3.1: Add executor regression tests**
   - Verify `STDIN_JSON` serializes `{}`.
   - Verify `STDIN_JSON` serializes `[]` if accepted by the type signature.
   - Verify `None` still means no stdin payload.
   - Run focused tests and confirm failures before implementation.
 
-- [ ] **Task 3.2: Add discovery regression tests**
+- [x] **Task 3.2: Add discovery regression tests**
   - Verify an explicit filesystem executable still returns `[path]`.
   - Verify an explicit Flatpak app ID returns `["flatpak", "run", app_id]`.
   - Verify a bad explicit value still raises `LudusaviNotFoundError`.
   - Run focused tests and confirm failures before implementation.
 
-- [ ] **Task 3.3: Add wrap command tests**
+- [x] **Task 3.3: Add wrap command tests**
   - Verify `wrap(command, name="Game")` emits:
     `["wrap", "--name", "Game", "--", *command]`.
   - Verify `wrap(command, infer="steam")` emits:
@@ -221,13 +220,13 @@ the authoritative commit-time quality gate.
   - Verify documented flags are included in stable order.
   - Run focused tests and confirm failures before implementation.
 
-- [ ] **Task 3.4: Add cloud command tests**
+- [x] **Task 3.4: Add cloud command tests**
   - Verify `cloud_upload()` and `cloud_download()` support `games`.
   - Verify both support `local`, `cloud`, `force`, `preview`, and `gui`.
   - Verify option order is deterministic and games are appended after options.
   - Run focused tests and confirm failures before implementation.
 
-- [ ] **Task 3.5: Add validation tests for conflicting flags**
+- [x] **Task 3.5: Add validation tests for conflicting flags**
   - Verify `backup(cloud_sync=True, no_cloud_sync=True)` raises before
     subprocess execution.
   - Verify `restore(cloud_sync=True, no_cloud_sync=True)` raises before
@@ -238,20 +237,20 @@ the authoritative commit-time quality gate.
 
 ### Phase 4: Implement (GREEN)
 
-- [ ] **Task 4.1: Fix `STDIN_JSON` serialization**
+- [x] **Task 4.1: Fix `STDIN_JSON` serialization**
   - Change the guard in `LudusaviExecutor.execute()` from truthiness to
     `input_data is not None`.
   - Broaden the `input_data` annotation if list payloads should be accepted.
   - Run the focused executor tests.
 
-- [ ] **Task 4.2: Support explicit Flatpak IDs**
+- [x] **Task 4.2: Support explicit Flatpak IDs**
   - Detect explicit values that are not filesystem paths but look like Flatpak
     IDs.
   - Verify `flatpak` exists before returning `["flatpak", "run", app_id]`.
   - Verify the Flatpak command with `--version`.
   - Run the focused discovery tests.
 
-- [ ] **Task 4.3: Redesign `wrap()`**
+- [x] **Task 4.3: Redesign `wrap()`**
   - Require exactly one of `name` or `infer`.
   - Add supported options from `docs/specs/cli_help_audit.txt`: `force`,
     `force_backup`, `force_restore`, `no_backup`, `no_restore`,
@@ -261,13 +260,13 @@ the authoritative commit-time quality gate.
   - Emit `["wrap", ...options..., "--", *command]`.
   - Run focused wrap tests.
 
-- [ ] **Task 4.4: Expand cloud upload/download APIs**
+- [x] **Task 4.4: Expand cloud upload/download APIs**
   - Add parameters: `games`, `local`, `cloud`, `force`, `preview`, and `gui`.
   - Keep mode `JSON`, which lets the executor append `--api`.
   - Append games after options.
   - Run focused cloud command tests.
 
-- [ ] **Task 4.5: Add argument validation**
+- [x] **Task 4.5: Add argument validation**
   - Raise `ValueError` for mutually exclusive flags instead of delegating
     invalid calls to Ludusavi.
   - Apply validation to cloud sync flags and backup edit lock flags.
@@ -275,17 +274,17 @@ the authoritative commit-time quality gate.
 
 ### Phase 5: Refactor
 
-- [ ] **Task 5.1: Extract command-building helpers if duplication grows**
+- [x] **Task 5.1: Extract command-building helpers if duplication grows**
   - Prefer small private helpers only when they reduce real duplication.
   - Keep public behavior covered by tests.
 
-- [ ] **Task 5.2: Review type annotations**
+- [x] **Task 5.2: Review type annotations**
   - Keep Python 3.12-compatible annotations.
   - Avoid broadening public types beyond Ludusavi's documented contract.
 
 ### Phase 6: Alias Config Decision
 
-- [ ] **Task 6.1: Decide alias-write policy**
+- [x] **Task 6.1: Decide alias-write policy**
   - Option A: Keep standard-library-only JSON rewriting and document that
     comments/formatting are not preserved.
   - Option B: Add a YAML dependency and preserve YAML structure as much as
@@ -293,31 +292,31 @@ the authoritative commit-time quality gate.
   - Option C: Remove or de-emphasize `add_game_alias()` until a safer
     config-editing path exists.
 
-- [ ] **Task 6.2: Add tests for chosen policy**
-  - If keeping JSON rewriting, test idempotence and document limitations.
-  - If switching to YAML handling, test round-trip preservation expectations.
+- [x] **Task 6.2: Document chosen policy**
+  - Kept standard-library JSON rewriting.
+  - Documented that comments and formatting are not preserved.
 
 ### Phase 7: Validate
 
-- [ ] **Task 7.1: Run full test suite**
+- [x] **Task 7.1: Run full test suite**
   - `./run.sh uv run pytest`
 
-- [ ] **Task 7.2: Run lint**
+- [x] **Task 7.2: Run lint**
   - `./run.sh uv run ruff check`
 
-- [ ] **Task 7.3: Run type checks if practical**
+- [x] **Task 7.3: Run type checks if practical**
   - `./run.sh uv run ty check`
 
-- [ ] **Task 7.4: Prepare for pre-commit validation**
+- [x] **Task 7.4: Prepare for pre-commit validation**
   - Stage changes as atomic commits.
   - Let `.git/hooks/pre-commit` run and pass at commit time.
 
 ### Phase 8: Commit
 
-- [ ] **Task 8.1: Use an appropriate branch**
+- [x] **Task 8.1: Use an appropriate branch**
   - Use a branch such as `fix/pyludusavi-review-findings`.
 
-- [ ] **Task 8.2: Commit only after validation**
+- [x] **Task 8.2: Commit only after validation**
   - Use imperative commit style, for example:
     `Fix pyludusavi CLI wrapper contracts`.
   - Keep commits atomic so pre-commit failures are isolated to one coherent
@@ -325,26 +324,26 @@ the authoritative commit-time quality gate.
 
 ### Phase 9: Document
 
-- [ ] **Task 9.1: Update README**
+- [x] **Task 9.1: Update README**
   - Correct explicit Flatpak app ID examples.
   - Add examples for `wrap(name=...)` and `wrap(infer=...)`.
   - Adjust "100% CLI Coverage" unless all CLI flags are actually covered.
 
-- [ ] **Task 9.2: Update compatibility policy**
+- [x] **Task 9.2: Update compatibility policy**
   - Correct mode claims for `backups_edit()` and `wrap()` if they remain TEXT
     commands.
   - Document which commands depend on executor `auto_api`.
 
-- [ ] **Task 9.3: Record session log**
+- [x] **Task 9.3: Record session log**
   - Add `docs/agent_conversations/YYYY-MM-DD_fix_review_findings.json`.
   - Include date, task objective, files modified, tests added, design decisions,
     and results.
 
-## Open Questions
+## Decisions
 
-- Should `explicit_path` be renamed, or should a separate `flatpak_id`
-  constructor argument be added?
-- Should `wrap()` remain TEXT because the CLI help does not show `--api`, or
-  should behavior be validated against a real Ludusavi binary?
-- Is preserving `config.yaml` formatting important enough to add a YAML
-  dependency?
+- Added a separate `flatpak_id` constructor argument and kept `explicit_path`
+  path-only.
+- Kept `wrap()` in TEXT mode because the CLI help audit does not expose
+  `--api` for `wrap`.
+- Kept `add_game_alias()` standard-library-only and documented that it rewrites
+  config as JSON without preserving comments or formatting.

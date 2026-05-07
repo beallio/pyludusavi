@@ -1,0 +1,42 @@
+{
+  "date": "2026-05-07",
+  "task_objective": "Fix the pyludusavi code review findings around CLI wrapper contracts, docs, and agent workflow guidance.",
+  "files_modified": [
+    "AGENTS.md",
+    "README.md",
+    "docs/plans/fix_review_findings.md",
+    "docs/specs/compatibility_policy.md",
+    "src/pyludusavi/core.py",
+    "src/pyludusavi/discovery.py",
+    "src/pyludusavi/main.py",
+    "tests/test_discovery.py",
+    "tests/test_executor.py",
+    "tests/test_ludusavi_data.py",
+    "tests/test_ludusavi_integration.py",
+    "tests/test_ludusavi_metadata.py"
+  ],
+  "tests_added": [
+    "STDIN_JSON serialization for empty dict, empty list, and None payloads",
+    "explicit Flatpak ID discovery success and failure",
+    "Ludusavi(flatpak_id=...) constructor forwarding",
+    "cloud upload/download option mapping",
+    "wrap name/infer command construction and validation",
+    "backup/restore/cloud and backups edit mutually exclusive flag validation",
+    "direct validation helper conflict coverage for the repository TDD hook"
+  ],
+  "design_decisions": [
+    "Added a separate flatpak_id constructor argument instead of overloading explicit_path.",
+    "Kept wrap() in TEXT mode because the local CLI help audit does not show --api for wrap.",
+    "Kept add_game_alias() standard-library-only and documented that JSON rewriting does not preserve YAML comments or formatting.",
+    "Updated AGENTS.md to use the actual local .git/hooks/pre-commit hook and atomic commits.",
+    "Split work into atomic commits so the local hook validated each commit."
+  ],
+  "results": [
+    "./run.sh uv run ruff check passed",
+    "./run.sh uv run ruff format applied",
+    "./run.sh uv run ty check src/ passed",
+    "./run.sh uv run pytest passed with 46 tests",
+    "./run.sh bash scripts/check_tdd.sh passed",
+    ".git/hooks/pre-commit passed for committed changes"
+  ]
+}

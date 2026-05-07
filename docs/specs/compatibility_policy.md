@@ -14,14 +14,14 @@ This document serves as the Source of Truth for the Ludusavi Python wrapper.
 | `backup()` | `backup` | JSON | Backup result dictionary |
 | `restore()` | `restore` | JSON | Restore result dictionary |
 | `backups_list()` | `backups` | JSON | List of backups |
-| `backups_edit()` | `backups edit` | JSON | Edit confirmation |
+| `backups_edit()` | `backups edit` | TEXT | Edit confirmation |
 | `find()` | `find` | JSON | Search result dictionary |
 | `cloud_upload()` | `cloud upload` | JSON | Sync result dictionary |
 | `cloud_download()` | `cloud download` | JSON | Sync result dictionary |
 | `cloud_set()` | `cloud set` | TEXT | Raw stdout |
 | `bulk_api()` | `api` | STDIN_JSON | Multi-response dictionary |
 | `schema()` | `schema` | JSON/TEXT | Schema dictionary or raw text |
-| `wrap()` | `wrap` | JSON | Execution result dictionary |
+| `wrap()` | `wrap` | TEXT | Raw stdout |
 | `complete()` | `complete` | TEXT | Shell script string |
 | `open_gui()` | `gui` | SPAWN | Non-blocking process |
 | `version()` | `--version` | TEXT | "ludusavi X.Y.Z" |
