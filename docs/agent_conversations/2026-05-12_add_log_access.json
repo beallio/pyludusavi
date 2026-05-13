@@ -1,0 +1,18 @@
+{
+  "date": "2026-05-12",
+  "task_objective": "Add log_dir() and log_show() functions to provide access to Ludusavi logs.",
+  "files_modified": [
+    "src/pyludusavi/main.py",
+    "tests/test_log.py",
+    "docs/plans/log_access.md"
+  ],
+  "tests_added": [
+    "tests/test_log.py"
+  ],
+  "design_decisions": [
+    "Used config_path() as a base to find the log directory, as Ludusavi stores them in the same folder.",
+    "Handled missing log file by returning an empty string in log_show().",
+    "Added 'os' import to src/pyludusavi/main.py."
+  ],
+  "results": "Successfully implemented and tested log_dir() and log_show(). All quality checks and tests passed."
+}
