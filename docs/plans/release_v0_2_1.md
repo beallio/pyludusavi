@@ -1,6 +1,6 @@
-# Plan - Release v0.1.2
+# Plan - Release v0.2.1
 
-Release v0.1.2 to fix the log filename issue.
+Release v0.2.1 to fix the log filename issue.
 
 ## Problem Definition
 The log filename was incorrectly set to `ludusavi.log` instead of `ludusavi_rCURRENT.log`.
@@ -22,6 +22,6 @@ N/A
 - All 59 tests passed.
 
 ## Release Details
-- **Version**: v0.1.2
-- **Title**: v0.1.2: Correct log filename
+- **Version**: v0.2.1
+- **Title**: v0.2.1: Correct log filename
 - **Description**: This release corrects the filename targeted by `Ludusavi.log_show()` to `ludusavi_rCURRENT.log`.
