@@ -12,5 +12,5 @@
   "design_decisions": [
     "Updated Ludusavi.log_show() to target ludusavi_rCURRENT.log instead of ludusavi.log based on user requirements."
   ],
-  "results": "Successfully updated the log filename and verified with tests. All 59 tests passed."
+  "results": "Successfully updated the log filename, verified with tests, and pushed bug fix release v0.2.1. All 59 tests passed."
 }
