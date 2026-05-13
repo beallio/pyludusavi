@@ -27,3 +27,15 @@ def test_log_show_not_found():
         with patch.object(Ludusavi, "log_dir", return_value="/path/to/logs"):
             with patch("os.path.exists", return_value=False):
                 assert lud.log_show() == ""
+
+
+def test_log_show_filename():
+    with patch("pyludusavi.main.find_ludusavi", return_value=["ludusavi"]):
+        lud = Ludusavi()
+        with patch.object(Ludusavi, "log_dir", return_value="/path/to/logs"):
+            with patch("os.path.exists", return_value=True):
+                with patch("builtins.open", mock_open()) as mocked_open:
+                    lud.log_show()
+                    mocked_open.assert_called_once_with(
+                        "/path/to/logs/ludusavi_rCURRENT.log", "r", encoding="utf-8"
+                    )

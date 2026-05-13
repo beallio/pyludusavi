@@ -1,0 +1,16 @@
+{
+  "date": "2026-05-12",
+  "task_objective": "Correct the Ludusavi log filename from ludusavi.log to ludusavi_rCURRENT.log.",
+  "files_modified": [
+    "src/pyludusavi/main.py",
+    "tests/test_log.py",
+    "docs/plans/log_access.md"
+  ],
+  "tests_added": [
+    "test_log_show_filename"
+  ],
+  "design_decisions": [
+    "Updated Ludusavi.log_show() to target ludusavi_rCURRENT.log instead of ludusavi.log based on user requirements."
+  ],
+  "results": "Successfully updated the log filename and verified with tests. All 59 tests passed."
+}

@@ -18,8 +18,8 @@ The functions will be added to the `Ludusavi` class in `src/pyludusavi/main.py`.
 - **Implementation**: Uses `self.config_path()` and `os.path.dirname()` to find the directory.
 
 ### `Ludusavi.log_show()`
-- **Returns**: `str` - The contents of the `ludusavi.log` file.
-- **Implementation**: Reads the file located at `os.path.join(self.log_dir(), "ludusavi.log")`.
+- **Returns**: `str` - The contents of the `ludusavi_rCURRENT.log` file.
+- **Implementation**: Reads the file located at `os.path.join(self.log_dir(), "ludusavi_rCURRENT.log")`.
 
 ## Dependency Requirements
 - `os`: Standard library for path manipulation.
