@@ -1,6 +1,7 @@
 import unittest
-from unittest.mock import patch, mock_open
+from unittest.mock import patch
 import json
+from pathlib import Path
 from pyludusavi.main import Ludusavi
 from pyludusavi.core import LudusaviResponse
 
@@ -18,8 +19,8 @@ class TestAlias(unittest.TestCase):
 
     @patch("pyludusavi.main.Ludusavi.config_path")
     @patch("pyludusavi.main.Ludusavi.config_show")
-    @patch("builtins.open", new_callable=mock_open)
-    def test_add_game_alias(self, mock_file, mock_show, mock_path):
+    @patch.object(Path, "write_text")
+    def test_add_game_alias(self, mock_write, mock_show, mock_path):
         # Setup
         mock_path.return_value = "/path/to/config.yaml"
         mock_show.return_value = LudusaviResponse(
@@ -30,10 +31,9 @@ class TestAlias(unittest.TestCase):
         self.ludusavi.add_game_alias("My Game", "Official Game")
 
         # Verify
-        mock_file.assert_called_with("/path/to/config.yaml", "w", encoding="utf-8")
-
-        # Capture the data written to the file
-        written_data = "".join(call.args[0] for call in mock_file().write.call_args_list)
+        # Path.write_text is called on the Path object created from mock_path.return_value
+        mock_write.assert_called_once()
+        written_data = mock_write.call_args[0][0]
         parsed_data = json.loads(written_data)
 
         self.assertEqual(len(parsed_data["customGames"]), 1)

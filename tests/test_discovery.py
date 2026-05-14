@@ -1,4 +1,5 @@
 import unittest
+from pathlib import Path
 from unittest.mock import patch, MagicMock
 from pyludusavi.discovery import find_ludusavi, LudusaviNotFoundError
 
@@ -13,6 +14,17 @@ class TestDiscovery(unittest.TestCase):
         self.assertEqual(result, [path])
         mock_run.assert_called_with(
             [path, "--version"], capture_output=True, text=True, check=False
+        )
+
+    @patch("shutil.which")
+    @patch("subprocess.run")
+    def test_find_by_explicit_path_object(self, mock_run, mock_which):
+        mock_run.return_value = MagicMock(returncode=0)
+        path = Path("/custom/ludusavi")
+        result = find_ludusavi(explicit_path=path)
+        self.assertEqual(result, [str(path)])
+        mock_run.assert_called_with(
+            [str(path), "--version"], capture_output=True, text=True, check=False
         )
 
     @patch("shutil.which")

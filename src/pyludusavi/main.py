@@ -1,4 +1,5 @@
-import os
+import json
+from pathlib import Path
 from typing import Optional, List, Dict, Literal, Any, Union
 from .discovery import find_ludusavi
 from .core import LudusaviExecutor, LudusaviResponse
@@ -731,7 +732,7 @@ class Ludusavi:
         Returns:
             str: The absolute path to the log directory.
         """
-        return os.path.dirname(self.config_path())
+        return str(Path(self.config_path()).parent)
 
     def log_show(self) -> str:
         """
@@ -740,11 +741,10 @@ class Ludusavi:
         Returns:
             str: The contents of ludusavi_rCURRENT.log, or an empty string if it does not exist.
         """
-        path = os.path.join(self.log_dir(), "ludusavi_rCURRENT.log")
-        if not os.path.exists(path):
+        path = Path(self.log_dir()) / "ludusavi_rCURRENT.log"
+        if not path.exists():
             return ""
-        with open(path, "r", encoding="utf-8") as f:
-            return f.read()
+        return path.read_text(encoding="utf-8")
 
     def add_game_alias(self, name: str, alias: str) -> None:
         """
@@ -757,9 +757,7 @@ class Ludusavi:
             name: The custom name for the game.
             alias: The official title of the game as it appears in the manifest.
         """
-        import json
-
-        path = self.config_path()
+        path = Path(self.config_path())
         response = self.config_show()
         config = response.data
 
@@ -777,8 +775,7 @@ class Ludusavi:
         if not any(g.get("name") == name for g in custom_games):
             custom_games.append(new_custom)
 
-        with open(path, "w", encoding="utf-8") as f:
-            json.dump(config, f, indent=2)
+        path.write_text(json.dumps(config, indent=2), encoding="utf-8")
 
     def get_game_alias(self, name: str) -> Optional[str]:
         """

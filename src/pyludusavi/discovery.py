@@ -1,6 +1,7 @@
 import shutil
 import subprocess
-from typing import Optional
+from pathlib import Path
+from typing import Optional, Union
 
 
 class LudusaviNotFoundError(Exception):
@@ -10,7 +11,7 @@ class LudusaviNotFoundError(Exception):
 
 
 def find_ludusavi(
-    explicit_path: Optional[str] = None,
+    explicit_path: Optional[Union[str, Path]] = None,
     explicit_flatpak_id: Optional[str] = None,
     flatpak_id: str = "com.github.mtkennerly.ludusavi",
 ) -> list[str]:
@@ -31,8 +32,9 @@ def find_ludusavi(
     """
     # 1. Explicit path
     if explicit_path:
-        if _verify([explicit_path]):
-            return [explicit_path]
+        str_path = str(explicit_path)
+        if _verify([str_path]):
+            return [str_path]
         raise LudusaviNotFoundError(
             f"Explicitly provided Ludusavi path not found or invalid: {explicit_path}"
         )

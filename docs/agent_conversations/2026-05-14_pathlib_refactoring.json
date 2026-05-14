@@ -1,0 +1,20 @@
+{
+  "date": "2026-05-14",
+  "task_objective": "Refactor legacy os.path and string concatenation to pathlib.Path in discovery.py and main.py",
+  "files_modified": [
+    "src/pyludusavi/discovery.py",
+    "src/pyludusavi/main.py",
+    "tests/test_discovery.py",
+    "tests/test_log.py",
+    "tests/test_alias.py"
+  ],
+  "tests_added": [
+    "tests/test_discovery.py: test_find_by_explicit_path_object"
+  ],
+  "design_decisions": [
+    "Migrated discovery.find_ludusavi to support pathlib.Path in public API.",
+    "Replaced os.path usage in Ludusavi.log_dir, Ludusavi.log_show, and Ludusavi.add_game_alias with pathlib.Path equivalents.",
+    "Updated unit tests to mock pathlib.Path methods (exists, read_text, write_text) instead of os.path/builtins.open."
+  ],
+  "results": "All tests passed, type checks passed, and ruff linting passed. Baseline code coverage maintained."
+}
