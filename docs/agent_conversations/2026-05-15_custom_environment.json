@@ -1,0 +1,32 @@
+{
+  "date": "2026-05-15",
+  "task_objective": "Add instance-level environment overrides for Ludusavi discovery and subprocess execution",
+  "files_modified": [
+    "README.md",
+    "docs/agent_conversations/2026-05-15_custom_environment.json",
+    "docs/plans/custom_environment.md",
+    "src/pyludusavi/_environment.py",
+    "src/pyludusavi/core.py",
+    "src/pyludusavi/discovery.py",
+    "src/pyludusavi/main.py",
+    "tests/test_core.py",
+    "tests/test_discovery.py",
+    "tests/test_ludusavi_metadata.py"
+  ],
+  "tests_added": [
+    "tests/test__environment.py: test_resolve_environment_returns_none_without_overrides",
+    "tests/test__environment.py: test_resolve_environment_merges_overrides_without_mutating_input",
+    "tests/test_core.py: test_executor_merges_instance_env_for_run",
+    "tests/test_core.py: test_executor_merges_instance_env_for_spawn",
+    "tests/test_discovery.py: test_find_uses_merged_env_for_explicit_path_verification",
+    "tests/test_discovery.py: test_find_uses_merged_env_path_for_path_lookup",
+    "tests/test_ludusavi_metadata.py: test_init_accepts_env"
+  ],
+  "design_decisions": [
+    "Exposed custom environment configuration only at instance construction via Ludusavi(env=...).",
+    "Merged supplied overrides over a copy of os.environ before subprocess use.",
+    "Forwarded the resolved environment through discovery verification, PATH lookup, and executor subprocess calls.",
+    "Kept default discovery subprocess calls compatible by omitting env when no custom environment is supplied."
+  ],
+  "results": "Focused red-green tests passed for core, discovery, and Ludusavi constructor behavior."
+}

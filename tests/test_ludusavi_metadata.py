@@ -1,4 +1,5 @@
 import unittest
+import os
 from unittest.mock import patch
 from pyludusavi.core import LudusaviResponse
 from pyludusavi.main import Ludusavi
@@ -35,7 +36,28 @@ class TestLudusaviMetadata(unittest.TestCase):
             mock_find.assert_called_once_with(
                 explicit_path=None,
                 explicit_flatpak_id="com.github.mtkennerly.ludusavi",
+                env=None,
             )
+        self.patcher = patch("pyludusavi.main.find_ludusavi")
+        self.mock_find = self.patcher.start()
+        self.mock_find.return_value = ["ludusavi"]
+
+    @patch.dict(os.environ, {"PATH": "/ambient/bin", "KEEP": "yes"}, clear=True)
+    def test_init_accepts_env(self):
+        self.patcher.stop()
+        with (
+            patch("pyludusavi.main.find_ludusavi") as mock_find,
+            patch("pyludusavi.main.LudusaviExecutor") as mock_executor,
+        ):
+            mock_find.return_value = ["ludusavi"]
+            Ludusavi(env={"PATH": "/custom/bin", "EXTRA": "1"})
+            resolved_env = {"PATH": "/custom/bin", "KEEP": "yes", "EXTRA": "1"}
+            mock_find.assert_called_once_with(
+                explicit_path=None,
+                explicit_flatpak_id=None,
+                env=resolved_env,
+            )
+            mock_executor.assert_called_once_with(["ludusavi"], env=resolved_env)
         self.patcher = patch("pyludusavi.main.find_ludusavi")
         self.mock_find = self.patcher.start()
         self.mock_find.return_value = ["ludusavi"]

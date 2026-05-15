@@ -1,4 +1,5 @@
 import unittest
+import os
 from pathlib import Path
 from unittest.mock import patch, MagicMock
 from pyludusavi.discovery import find_ludusavi, LudusaviNotFoundError
@@ -15,6 +16,36 @@ class TestDiscovery(unittest.TestCase):
         mock_run.assert_called_with(
             [path, "--version"], capture_output=True, text=True, check=False
         )
+
+    @patch.dict(os.environ, {"PATH": "/ambient/bin", "KEEP": "yes"}, clear=True)
+    @patch("shutil.which")
+    @patch("subprocess.run")
+    def test_find_uses_merged_env_for_explicit_path_verification(self, mock_run, mock_which):
+        mock_run.return_value = MagicMock(returncode=0)
+        path = "/custom/ludusavi"
+
+        result = find_ludusavi(explicit_path=path, env={"PATH": "/custom/bin", "EXTRA": "1"})
+
+        self.assertEqual(result, [path])
+        mock_run.assert_called_with(
+            [path, "--version"],
+            capture_output=True,
+            text=True,
+            check=False,
+            env={"PATH": "/custom/bin", "KEEP": "yes", "EXTRA": "1"},
+        )
+
+    @patch.dict(os.environ, {"PATH": "/ambient/bin"}, clear=True)
+    @patch("shutil.which")
+    @patch("subprocess.run")
+    def test_find_uses_merged_env_path_for_path_lookup(self, mock_run, mock_which):
+        mock_run.return_value = MagicMock(returncode=0)
+        mock_which.return_value = "/custom/bin/ludusavi"
+
+        result = find_ludusavi(env={"PATH": "/custom/bin"})
+
+        self.assertEqual(result, ["/custom/bin/ludusavi"])
+        mock_which.assert_called_with("ludusavi", path="/custom/bin")
 
     @patch("shutil.which")
     @patch("subprocess.run")

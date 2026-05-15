@@ -86,6 +86,15 @@ lud = Ludusavi(flatpak_id="com.github.mtkennerly.ludusavi")
 lud = Ludusavi(config_dir="/home/user/my-ludusavi-config")
 ```
 
+#### Custom Environment
+Pass environment overrides when Ludusavi needs a different `PATH`, `HOME`, or
+launcher-specific variable. Overrides are merged onto the current process environment
+and used for both discovery and command execution.
+
+```python
+lud = Ludusavi(env={"PATH": "/opt/ludusavi/bin:/usr/bin", "HOME": "/home/deck"})
+```
+
 #### Bulk API
 For performance-critical bulk operations, use the native `api` subcommand:
 
