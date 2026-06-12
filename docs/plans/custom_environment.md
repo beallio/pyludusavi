@@ -6,12 +6,17 @@
 environment variables for discovery or normal command execution without dropping to the
 lower-level executor API.
 
+The lower-level executor also accepts per-call overrides, but resolving those overrides
+directly against `os.environ` discards configured instance values. Environment resolution
+must cascade across all three levels.
+
 ## Architecture Overview
 
 - Add `env` to `Ludusavi(...)` and `find_ludusavi(...)`.
 - Merge provided values over a copy of `os.environ`.
 - Use the resolved environment for discovery verification and all instance subprocess calls.
-- Keep the environment instance-scoped instead of adding per-method overrides.
+- Preserve the lower-level executor's per-call overrides with precedence:
+  process environment, instance overrides, then call overrides.
 
 ## Core Data Structures
 
@@ -22,6 +27,7 @@ lower-level executor API.
 
 - `Ludusavi(env: Optional[Mapping[str, str]] = None)`
 - `find_ludusavi(env: Optional[Mapping[str, str]] = None)`
+- `LudusaviExecutor.execute(..., env: Optional[Mapping[str, str]] = None)`
 
 ## Dependency Requirements
 
@@ -33,4 +39,6 @@ No new dependencies are required.
 - Add red tests for custom `PATH` lookup using the merged environment.
 - Add red tests for `Ludusavi(env=...)` forwarding the resolved environment to discovery and executor.
 - Add red tests for executor `run` and `Popen` subprocess calls using the instance environment.
+- Add red tests proving call overrides retain instance values and take precedence on conflicts.
+- Verify environment mappings are copied instead of mutated.
 - Validate with Ruff, ty, pytest, and the local pre-commit hook.

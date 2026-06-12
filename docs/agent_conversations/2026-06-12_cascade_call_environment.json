@@ -1,0 +1,20 @@
+{
+  "date": "2026-06-12",
+  "task_objective": "Preserve instance environment overrides when executor calls add per-call overrides",
+  "files_modified": [
+    "docs/agent_conversations/2026-06-12_cascade_call_environment.json",
+    "docs/plans/custom_environment.md",
+    "src/pyludusavi/core.py",
+    "tests/test_core.py"
+  ],
+  "tests_added": [
+    "tests/test_core.py: test_executor_cascades_call_env_over_instance_env_for_run",
+    "tests/test_core.py: test_executor_cascades_call_env_over_instance_env_for_spawn"
+  ],
+  "design_decisions": [
+    "Applied environment precedence in the order process, instance, then call.",
+    "Copied resolved mappings before applying call overrides so caller and executor state remain unchanged.",
+    "Preserved the existing behavior where a call override without instance configuration merges onto os.environ."
+  ],
+  "results": "The regression tests failed before implementation because instance overrides were absent, then all 13 core tests passed after the fix."
+}

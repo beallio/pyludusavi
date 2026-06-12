@@ -61,6 +61,28 @@ class TestExecutor(unittest.TestCase):
             {"PATH": "/custom/bin", "KEEP": "yes", "EXTRA": "1"},
         )
 
+    @patch.dict(os.environ, {"PATH": "/ambient/bin", "KEEP": "yes"}, clear=True)
+    @patch("subprocess.run")
+    def test_executor_cascades_call_env_over_instance_env_for_run(self, mock_run):
+        mock_run.return_value = MagicMock(returncode=0, stdout="ludusavi 0.31.0", stderr="")
+        instance_env = {"PATH": "/instance/bin", "INSTANCE": "yes"}
+        call_env = {"PATH": "/call/bin", "CALL": "yes"}
+        executor = LudusaviExecutor(self.prefix, env=instance_env)
+
+        executor.execute(["--version"], mode="TEXT", env=call_env)
+
+        self.assertEqual(
+            mock_run.call_args.kwargs["env"],
+            {
+                "PATH": "/call/bin",
+                "KEEP": "yes",
+                "INSTANCE": "yes",
+                "CALL": "yes",
+            },
+        )
+        self.assertEqual(instance_env, {"PATH": "/instance/bin", "INSTANCE": "yes"})
+        self.assertEqual(call_env, {"PATH": "/call/bin", "CALL": "yes"})
+
     @patch("subprocess.Popen")
     def test_execute_spawn_success(self, mock_popen):
         # Spawn mode should not wait for the process
@@ -75,6 +97,26 @@ class TestExecutor(unittest.TestCase):
         executor.execute(["gui"], mode="SPAWN")
 
         self.assertEqual(mock_popen.call_args.kwargs["env"], {"PATH": "/custom/bin"})
+
+    @patch.dict(os.environ, {"PATH": "/ambient/bin", "KEEP": "yes"}, clear=True)
+    @patch("subprocess.Popen")
+    def test_executor_cascades_call_env_over_instance_env_for_spawn(self, mock_popen):
+        executor = LudusaviExecutor(
+            self.prefix,
+            env={"PATH": "/instance/bin", "INSTANCE": "yes"},
+        )
+
+        executor.execute(["gui"], mode="SPAWN", env={"PATH": "/call/bin", "CALL": "yes"})
+
+        self.assertEqual(
+            mock_popen.call_args.kwargs["env"],
+            {
+                "PATH": "/call/bin",
+                "KEEP": "yes",
+                "INSTANCE": "yes",
+                "CALL": "yes",
+            },
+        )
 
     @patch("subprocess.run")
     def test_execute_stdin_json_serializes_empty_dict(self, mock_run):
