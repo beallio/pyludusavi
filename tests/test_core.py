@@ -103,8 +103,16 @@ class TestExecutor(unittest.TestCase):
     @patch("subprocess.Popen")
     def test_execute_spawn_success(self, mock_popen):
         # Spawn mode should not wait for the process
-        self.executor.execute(["gui"], mode="SPAWN")
+        result = self.executor.execute(["gui"], mode="SPAWN")
         mock_popen.assert_called()
+        self.assertIsNone(result)
+
+    @patch("subprocess.run")
+    def test_execute_non_spawn_returns_response(self, mock_run):
+        # Non-SPAWN modes always return a response (never None).
+        mock_run.return_value = MagicMock(returncode=0, stdout='{"ok": true}', stderr="")
+        result = self.executor.execute(["backup"], mode="JSON")
+        self.assertIsNotNone(result)
 
     @patch.dict(os.environ, {"PATH": "/ambient/bin"}, clear=True)
     @patch("subprocess.Popen")

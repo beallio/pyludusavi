@@ -1,7 +1,7 @@
 import subprocess
 import json
 import logging
-from typing import Any, Optional, Literal, TypeVar, Generic, Mapping
+from typing import Any, Optional, Literal, TypeVar, Generic, Mapping, overload
 from dataclasses import dataclass
 from ._environment import resolve_environment
 
@@ -55,6 +55,28 @@ class LudusaviExecutor:
     def __init__(self, command_prefix: list[str], env: Optional[Mapping[str, str]] = None):
         self.command_prefix = command_prefix
         self.env = resolve_environment(env)
+
+    @overload
+    def execute(
+        self,
+        args: list[str],
+        mode: Literal["JSON", "TEXT", "STDIN_JSON"] = ...,
+        input_data: Optional[Any] = ...,
+        timeout: Optional[float] = ...,
+        env: Optional[Mapping[str, str]] = ...,
+        auto_api: bool = ...,
+    ) -> LudusaviResponse: ...
+
+    @overload
+    def execute(
+        self,
+        args: list[str],
+        mode: Literal["SPAWN"],
+        input_data: Optional[Any] = ...,
+        timeout: Optional[float] = ...,
+        env: Optional[Mapping[str, str]] = ...,
+        auto_api: bool = ...,
+    ) -> None: ...
 
     def execute(
         self,

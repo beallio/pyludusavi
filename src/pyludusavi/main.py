@@ -63,7 +63,6 @@ class Ludusavi:
             str: The version string (e.g., "ludusavi 0.31.0").
         """
         response = self.executor.execute(["--version"], mode="TEXT")
-        assert response is not None
         return response.data.strip()
 
     def schema(
@@ -85,7 +84,6 @@ class Ludusavi:
         response = self.executor.execute(
             ["schema", "--format", format, category], mode=mode, auto_api=False
         )
-        assert response is not None
         return response.data
 
     def manifest_show(self) -> LudusaviResponse[ApiManifest]:
@@ -96,7 +94,6 @@ class Ludusavi:
             LudusaviResponse[ApiManifest]: The JSON response containing the manifest data.
         """
         response = self.executor.execute(["manifest", "show"], mode="JSON")
-        assert response is not None
         return response
 
     def manifest_update(
@@ -118,7 +115,6 @@ class Ludusavi:
         if force:
             args.append("--force")
         response = self.executor.execute(args, mode="TEXT", timeout=timeout)
-        assert response is not None
         return response
 
     def config_show(self, default: bool = False) -> LudusaviResponse[ApiConfig]:
@@ -135,7 +131,6 @@ class Ludusavi:
         if default:
             args.append("--default")
         response = self.executor.execute(args, mode="JSON")
-        assert response is not None
         return response
 
     def config_path(self) -> str:
@@ -146,7 +141,6 @@ class Ludusavi:
             str: The absolute path to Ludusavi's config.yaml.
         """
         response = self.executor.execute(["config", "path"], mode="TEXT")
-        assert response is not None
         return response.data.strip()
 
     # --- Data Group ---
@@ -248,7 +242,6 @@ class Ludusavi:
             args.extend(games)
 
         response = self.executor.execute(args, mode="JSON", timeout=timeout)
-        assert response is not None
         return response
 
     def restore(
@@ -324,7 +317,6 @@ class Ludusavi:
             args.extend(games)
 
         response = self.executor.execute(args, mode="JSON", timeout=timeout)
-        assert response is not None
         return response
 
     def backups_list(
@@ -347,7 +339,6 @@ class Ludusavi:
         if games:
             args.extend(games)
         response = self.executor.execute(args, mode="JSON")
-        assert response is not None
         return response
 
     def backups_edit(
@@ -394,7 +385,6 @@ class Ludusavi:
         if game:
             args.append(game)
         response = self.executor.execute(args, mode="TEXT")
-        assert response is not None
         return response
 
     # --- Integration Group ---
@@ -474,7 +464,6 @@ class Ludusavi:
         if games:
             args.extend(games)
         response = self.executor.execute(args, mode="JSON")
-        assert response is not None
         return response
 
     def cloud_upload(
@@ -517,7 +506,6 @@ class Ludusavi:
         if games:
             args.extend(games)
         response = self.executor.execute(args, mode="JSON", timeout=timeout)
-        assert response is not None
         return response
 
     def cloud_download(
@@ -560,7 +548,6 @@ class Ludusavi:
         if games:
             args.extend(games)
         response = self.executor.execute(args, mode="JSON", timeout=timeout)
-        assert response is not None
         return response
 
     def cloud_set(
@@ -592,7 +579,6 @@ class Ludusavi:
         if options:
             args.extend(options)
         response = self.executor.execute(args, mode="TEXT")
-        assert response is not None
         return response
 
     def bulk_api(
@@ -613,7 +599,6 @@ class Ludusavi:
         response = self.executor.execute(
             ["api"], mode="STDIN_JSON", input_data=input_data, auto_api=False, timeout=timeout
         )
-        assert response is not None
         return response
 
     def wrap(
@@ -715,7 +700,6 @@ class Ludusavi:
         args.append("--")
         args.extend(command)
         response = self.executor.execute(args, mode="TEXT", timeout=timeout)
-        assert response is not None
         return response
 
     # --- Utilities ---
@@ -731,7 +715,6 @@ class Ludusavi:
             str: The generated completion script.
         """
         response = self.executor.execute(["complete", shell], mode="TEXT")
-        assert response is not None
         return response.data
 
     def open_gui(self, custom_game: Optional[str] = None) -> None:
