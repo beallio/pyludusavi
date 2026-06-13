@@ -389,7 +389,7 @@ class Ludusavi:
             args.append("--lock")
         if unlock:
             args.append("--unlock")
-        if comment:
+        if comment is not None:
             args.extend(["--comment", comment])
         if game:
             args.append(game)

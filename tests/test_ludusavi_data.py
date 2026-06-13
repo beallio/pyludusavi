@@ -52,6 +52,16 @@ class TestLudusaviData(unittest.TestCase):
         )
 
     @patch("pyludusavi.core.LudusaviExecutor.execute")
+    def test_backups_edit_empty_comment(self, mock_execute):
+        mock_execute.return_value = LudusaviResponse(
+            data="Edited", raw="Edited", warnings="", command=[]
+        )
+        self.ludusavi.backups_edit(game="Witcher 3", comment="")
+        mock_execute.assert_called_with(
+            ["backups", "edit", "--comment", "", "Witcher 3"], mode="TEXT"
+        )
+
+    @patch("pyludusavi.core.LudusaviExecutor.execute")
     def test_restore_rejects_cloud_sync_conflict(self, mock_execute):
         with self.assertRaises(ValueError):
             self.ludusavi.restore(cloud_sync=True, no_cloud_sync=True)
