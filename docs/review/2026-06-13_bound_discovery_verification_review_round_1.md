@@ -112,3 +112,5 @@ git diff --check dev...HEAD               PASS
 
 - Addressed F1: Restored `uv.lock` from `dev` and committed as `54358bd661e90062e2b2142f922bd5335ca5e5a7`.
 - Verified `git diff dev...HEAD -- uv.lock` is empty.
+
+**Correction (Round 2)**: The first attempt produced an empty commit because the pre-commit hook ran `uv` which regenerated the global `exclude-newer` lockfile options before the commit was finalized. The effective correction commit, created with `UV_FROZEN=1`, is `c34a3a80991064434cf9d706780d2287d0fe241d`.
