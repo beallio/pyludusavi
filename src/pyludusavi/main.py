@@ -780,24 +780,32 @@ class Ludusavi:
             alias: The official title of the game as it appears in the manifest.
         """
         path = Path(self.config_path())
-        response = self.config_show()
-        config = response.data
+        config = self.config_show().data
 
-        new_custom = {
-            "name": name,
-            "alias": alias,
-            "files": [],
-            "registry": [],
-            "installDir": [],
-            "winePrefix": [],
-        }
-
-        # Avoid duplicates
         custom_games = config.setdefault("customGames", [])
-        if not any(g.get("name") == name for g in custom_games):
-            custom_games.append(new_custom)
+        existing = next((g for g in custom_games if g.get("name") == name), None)
 
-        path.write_text(json.dumps(config, indent=2), encoding="utf-8")
+        if existing is None:
+            custom_games.append(
+                {
+                    "name": name,
+                    "alias": alias,
+                    "files": [],
+                    "registry": [],
+                    "installDir": [],
+                    "winePrefix": [],
+                }
+            )
+        elif existing.get("alias") != alias:
+            existing["alias"] = alias
+        else:
+            # Already present with the same alias; nothing to do.
+            return
+
+        # Write atomically so a crash mid-write cannot corrupt the user's config.
+        tmp = path.with_name(path.name + ".tmp")
+        tmp.write_text(json.dumps(config, indent=2), encoding="utf-8")
+        tmp.replace(path)
 
     def get_game_alias(self, name: str) -> Optional[str]:
         """
