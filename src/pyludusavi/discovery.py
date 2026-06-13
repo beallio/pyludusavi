@@ -4,6 +4,8 @@ from pathlib import Path
 from typing import Mapping, Optional, Union
 from ._environment import resolve_environment
 
+_DISCOVERY_VERIFY_TIMEOUT_SECONDS = 15.0
+
 
 class LudusaviNotFoundError(Exception):
     """Raised when the Ludusavi executable or Flatpak could not be found."""
@@ -80,7 +82,11 @@ def _verify(prefix: list[str], env: Optional[dict[str, str]] = None) -> bool:
     try:
         if env is None:
             result = subprocess.run(
-                prefix + ["--version"], capture_output=True, text=True, check=False
+                prefix + ["--version"],
+                capture_output=True,
+                text=True,
+                check=False,
+                timeout=_DISCOVERY_VERIFY_TIMEOUT_SECONDS,
             )
         else:
             result = subprocess.run(
@@ -89,7 +95,8 @@ def _verify(prefix: list[str], env: Optional[dict[str, str]] = None) -> bool:
                 text=True,
                 check=False,
                 env=env,
+                timeout=_DISCOVERY_VERIFY_TIMEOUT_SECONDS,
             )
         return result.returncode == 0
-    except OSError:
+    except (OSError, subprocess.TimeoutExpired):
         return False

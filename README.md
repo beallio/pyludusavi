@@ -147,6 +147,8 @@ default to **no timeout** (`timeout=None`) so a long game session or large trans
 not killed. Every one of these accepts an explicit `timeout=<seconds>` override. A
 timeout raises `LudusaviTimeoutError`.
 
+*Note: The automatic background probe that verifies the Ludusavi executable during discovery has a fixed, non-configurable 15-second timeout. Timeout expiration rejects the candidate (falling back or raising `LudusaviNotFoundError`) rather than surfacing a timeout error.*
+
 ```python
 # Wrap a game launch with no time limit (default)
 lud.wrap(["./game.exe"], name="The Witcher 3")

@@ -1,5 +1,6 @@
 import unittest
 import os
+import subprocess
 from pathlib import Path
 from unittest.mock import patch, MagicMock
 from pyludusavi.discovery import find_ludusavi, LudusaviNotFoundError
@@ -14,7 +15,7 @@ class TestDiscovery(unittest.TestCase):
         result = find_ludusavi(explicit_path=path)
         self.assertEqual(result, [path])
         mock_run.assert_called_with(
-            [path, "--version"], capture_output=True, text=True, check=False
+            [path, "--version"], capture_output=True, text=True, check=False, timeout=15.0
         )
 
     @patch.dict(os.environ, {"PATH": "/ambient/bin", "KEEP": "yes"}, clear=True)
@@ -33,6 +34,7 @@ class TestDiscovery(unittest.TestCase):
             text=True,
             check=False,
             env={"PATH": "/custom/bin", "KEEP": "yes", "EXTRA": "1"},
+            timeout=15.0,
         )
 
     @patch.dict(os.environ, {"PATH": "/ambient/bin"}, clear=True)
@@ -55,7 +57,7 @@ class TestDiscovery(unittest.TestCase):
         result = find_ludusavi(explicit_path=path)
         self.assertEqual(result, [str(path)])
         mock_run.assert_called_with(
-            [str(path), "--version"], capture_output=True, text=True, check=False
+            [str(path), "--version"], capture_output=True, text=True, check=False, timeout=15.0
         )
 
     @patch("shutil.which")
@@ -82,6 +84,7 @@ class TestDiscovery(unittest.TestCase):
             capture_output=True,
             text=True,
             check=False,
+            timeout=15.0,
         )
 
     @patch("shutil.which")
@@ -99,6 +102,7 @@ class TestDiscovery(unittest.TestCase):
             capture_output=True,
             text=True,
             check=False,
+            timeout=15.0,
         )
 
     @patch("shutil.which")
@@ -124,3 +128,27 @@ class TestDiscovery(unittest.TestCase):
         mock_run.side_effect = NotADirectoryError()
         with self.assertRaises(LudusaviNotFoundError):
             find_ludusavi(explicit_path="/some/file/ludusavi")
+
+    @patch("shutil.which")
+    @patch("subprocess.run")
+    def test_verify_timeout_raises_error_for_explicit_path(self, mock_run, mock_which):
+        mock_run.side_effect = subprocess.TimeoutExpired(cmd=["ludusavi"], timeout=15.0)
+        with self.assertRaises(LudusaviNotFoundError):
+            find_ludusavi(explicit_path="/some/file/ludusavi")
+
+    @patch("shutil.which")
+    @patch("subprocess.run")
+    def test_verify_timeout_on_path_falls_back_to_flatpak(self, mock_run, mock_which):
+        # 1. PATH lookup succeeds but verification times out
+        # 2. Flatpak lookup succeeds and verification succeeds
+        mock_which.side_effect = ["/usr/bin/ludusavi", "/usr/bin/flatpak"]
+
+        def mock_run_effect(cmd, **kwargs):
+            if cmd[0] == "/usr/bin/ludusavi":
+                raise subprocess.TimeoutExpired(cmd=cmd, timeout=15.0)
+            return MagicMock(returncode=0)
+
+        mock_run.side_effect = mock_run_effect
+
+        result = find_ludusavi()
+        self.assertEqual(result, ["flatpak", "run", "com.github.mtkennerly.ludusavi"])
