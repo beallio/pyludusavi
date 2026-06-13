@@ -1,0 +1,51 @@
+{
+  "date": "2026-06-12",
+  "task_objective": "Remediate findings from a full project review: fix a critical timeout bug and several functional, typing, packaging, test-coverage, CI, and documentation issues (plan project_review_2026_06_12).",
+  "files_modified": [
+    "docs/plans/project_review_2026_06_12.md",
+    "docs/agent_conversations/2026-06-12_project_review_fixes.json",
+    "src/pyludusavi/core.py",
+    "src/pyludusavi/main.py",
+    "src/pyludusavi/discovery.py",
+    "src/pyludusavi/models.py",
+    "src/pyludusavi/__init__.py",
+    "src/pyludusavi/py.typed",
+    "pyproject.toml",
+    ".github/workflows/workflow.yml",
+    "README.md",
+    "tests/test_core.py",
+    "tests/test___init__.py",
+    "tests/test_alias.py",
+    "tests/test_discovery.py",
+    "tests/test_models.py",
+    "tests/test_ludusavi_data.py",
+    "tests/test_ludusavi_integration.py",
+    "tests/test_ludusavi_metadata.py",
+    "tests/test_regression.py"
+  ],
+  "tests_added": [
+    "tests/test_core.py: test_execute_timeout_raises_timeout_error, test_timeout_error_is_ludusavi_error, test_execute_non_spawn_returns_response, test_execute_json_auto_appends_api, test_execute_json_no_auto_api_when_disabled, test_execute_text_does_not_append_api",
+    "tests/test___init__.py: test_timeout_error_exported, test_py_typed_marker_present",
+    "tests/test_alias.py: test_add_game_alias_idempotent_when_unchanged, test_add_game_alias_updates_conflicting_alias (and rewrote test_add_game_alias for atomic write)",
+    "tests/test_discovery.py: test_verify_treats_oserror_as_not_found",
+    "tests/test_models.py: test_api_output_optional_top_level_fields, test_api_output_accepts_games_only",
+    "tests/test_ludusavi_data.py: test_backups_edit_empty_comment",
+    "tests/test_ludusavi_metadata.py: test_manifest_update, test_manifest_update_force_and_timeout, test_schema_yaml_uses_text_mode, test_init_accepts_path_for_explicit_path, test_init_accepts_path_for_config_dir",
+    "tests/test_ludusavi_integration.py: test_cloud_set, test_complete, test_open_gui (and added timeout=None assertions to bulk_api/cloud/wrap tests)"
+  ],
+  "design_decisions": [
+    "Added LudusaviTimeoutError as a subclass of LudusaviError so existing `except LudusaviError` handlers keep working while callers can distinguish timeouts.",
+    "Long-running operations (wrap, cloud_upload, cloud_download, manifest_update, bulk_api) now default to timeout=None, matching the pre-existing backup/restore behavior; wrap() was the critical fix because the 30s executor default was killing any game session longer than 30 seconds.",
+    "Dropped the originally planned Task 3 (--gui flag on backup/restore) per user decision not to expose it.",
+    "Hardened add_game_alias to be idempotent (no write when unchanged), to update a conflicting alias in place, and to write atomically via a sibling .tmp file plus Path.replace so an interrupted write cannot corrupt config.yaml.",
+    "Changed backups_edit comment guard from `if comment:` to `if comment is not None:` so an intentional empty comment is sent.",
+    "Marked LudusaviApiOutput.errors/overall/cloud as NotRequired since the real CLI omits absent top-level fields; verified via __required_keys__/__optional_keys__ and ty.",
+    "Overloaded LudusaviExecutor.execute() by mode (non-SPAWN -> LudusaviResponse, SPAWN -> None) and removed 17 `assert response is not None` lines in main.py; ty passed cleanly so the documented revert fallback was not needed.",
+    "Widened Ludusavi.__init__ explicit_path/config_dir to Union[str, Path] and str()-coerced config_dir before extending command_prefix so subprocess receives string args.",
+    "Broadened discovery._verify to `except OSError` so NotADirectoryError and similar errors are treated as 'not found' instead of propagating.",
+    "Added a py.typed marker plus the Typing :: Typed classifier so consumers' type checkers honor the annotations; verified the wheel includes pyludusavi/py.typed.",
+    "Made regression fixture loading CWD-independent by resolving paths relative to __file__.",
+    "Added dev to the CI push/pull_request branch filters so the integration branch is tested."
+  ],
+  "results": "Each change followed red-green TDD via ./run.sh uv run pytest. Full suite grew from 69 to 91 passing tests; ruff check, ruff format, and ty check src/ all pass. Work done on branch fix/project-review-2026-06-12 with atomic Conventional Commits, slated to merge to dev and release as v0.2.5."
+}

@@ -15,6 +15,7 @@ classifiers = [
     "Intended Audience :: Developers",
     "Topic :: Games/Entertainment",
     "Topic :: System :: Archiving :: Backup",
+    "Typing :: Typed",
 ]
 keywords = ["ludusavi", "game-backup", "wrapper", "api", "gaming"]
 dependencies = []

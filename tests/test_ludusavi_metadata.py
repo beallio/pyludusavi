@@ -1,5 +1,6 @@
 import unittest
 import os
+from pathlib import Path
 from unittest.mock import patch
 from pyludusavi.core import LudusaviResponse
 from pyludusavi.main import Ludusavi
@@ -62,6 +63,31 @@ class TestLudusaviMetadata(unittest.TestCase):
         self.mock_find = self.patcher.start()
         self.mock_find.return_value = ["ludusavi"]
 
+    def test_init_accepts_path_for_explicit_path(self):
+        self.patcher.stop()
+        with patch("pyludusavi.main.find_ludusavi") as mock_find:
+            mock_find.return_value = ["ludusavi"]
+            Ludusavi(explicit_path=Path("/opt/ludusavi"))
+            mock_find.assert_called_once_with(
+                explicit_path=Path("/opt/ludusavi"),
+                explicit_flatpak_id=None,
+                env=None,
+            )
+        self.patcher = patch("pyludusavi.main.find_ludusavi")
+        self.mock_find = self.patcher.start()
+        self.mock_find.return_value = ["ludusavi"]
+
+    def test_init_accepts_path_for_config_dir(self):
+        self.patcher.stop()
+        with patch("pyludusavi.main.find_ludusavi") as mock_find:
+            mock_find.return_value = ["ludusavi"]
+            lud = Ludusavi(config_dir=Path("/cfg"))
+            # command_prefix must contain str args (subprocess), not a Path object.
+            self.assertEqual(lud.command_prefix, ["ludusavi", "--config", "/cfg"])
+        self.patcher = patch("pyludusavi.main.find_ludusavi")
+        self.mock_find = self.patcher.start()
+        self.mock_find.return_value = ["ludusavi"]
+
     @patch("pyludusavi.core.LudusaviExecutor.execute")
     def test_config_path(self, mock_execute):
         mock_execute.return_value = LudusaviResponse(
@@ -87,6 +113,29 @@ class TestLudusaviMetadata(unittest.TestCase):
         mock_execute.assert_called_with(
             ["schema", "--format", "json", "api-output"], mode="JSON", auto_api=False
         )
+
+    @patch("pyludusavi.core.LudusaviExecutor.execute")
+    def test_schema_yaml_uses_text_mode(self, mock_execute):
+        mock_execute.return_value = LudusaviResponse(
+            data="schema-yaml", raw="schema-yaml", warnings="", command=[]
+        )
+        result = self.ludusavi.schema("config", format="yaml")
+        self.assertEqual(result, "schema-yaml")
+        mock_execute.assert_called_with(
+            ["schema", "--format", "yaml", "config"], mode="TEXT", auto_api=False
+        )
+
+    @patch("pyludusavi.core.LudusaviExecutor.execute")
+    def test_manifest_update(self, mock_execute):
+        mock_execute.return_value = LudusaviResponse(data="ok", raw="ok", warnings="", command=[])
+        self.ludusavi.manifest_update()
+        mock_execute.assert_called_with(["manifest", "update"], mode="TEXT", timeout=None)
+
+    @patch("pyludusavi.core.LudusaviExecutor.execute")
+    def test_manifest_update_force_and_timeout(self, mock_execute):
+        mock_execute.return_value = LudusaviResponse(data="ok", raw="ok", warnings="", command=[])
+        self.ludusavi.manifest_update(force=True, timeout=5.0)
+        mock_execute.assert_called_with(["manifest", "update", "--force"], mode="TEXT", timeout=5.0)
 
     @patch("pyludusavi.core.LudusaviExecutor.execute")
     def test_manifest_show(self, mock_execute):

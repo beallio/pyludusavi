@@ -1,7 +1,14 @@
 import unittest
 import os
+import subprocess
 from unittest.mock import patch, MagicMock
-from pyludusavi.core import LudusaviExecutor, LudusaviExecutionError, LudusaviContractError
+from pyludusavi.core import (
+    LudusaviExecutor,
+    LudusaviError,
+    LudusaviExecutionError,
+    LudusaviContractError,
+    LudusaviTimeoutError,
+)
 
 
 class TestExecutor(unittest.TestCase):
@@ -43,10 +50,38 @@ class TestExecutor(unittest.TestCase):
             self.executor.execute(["backup"], mode="JSON")
 
     @patch("subprocess.run")
+    def test_execute_timeout_raises_timeout_error(self, mock_run):
+        mock_run.side_effect = subprocess.TimeoutExpired(cmd=["ludusavi"], timeout=30)
+        with self.assertRaises(LudusaviTimeoutError):
+            self.executor.execute(["backup"], mode="JSON")
+
+    def test_timeout_error_is_ludusavi_error(self):
+        # Existing callers catch LudusaviError; timeout must remain compatible.
+        self.assertTrue(issubclass(LudusaviTimeoutError, LudusaviError))
+
+    @patch("subprocess.run")
     def test_execute_text_success(self, mock_run):
         mock_run.return_value = MagicMock(returncode=0, stdout="ludusavi 0.31.0", stderr="")
         response = self.executor.execute(["--version"], mode="TEXT")
         self.assertEqual(response.data, "ludusavi 0.31.0")
+
+    @patch("subprocess.run")
+    def test_execute_json_auto_appends_api(self, mock_run):
+        mock_run.return_value = MagicMock(returncode=0, stdout='{"ok": true}', stderr="")
+        self.executor.execute(["backup"], mode="JSON")
+        self.assertEqual(mock_run.call_args.args[0][-1], "--api")
+
+    @patch("subprocess.run")
+    def test_execute_json_no_auto_api_when_disabled(self, mock_run):
+        mock_run.return_value = MagicMock(returncode=0, stdout='{"ok": true}', stderr="")
+        self.executor.execute(["api"], mode="JSON", auto_api=False)
+        self.assertNotIn("--api", mock_run.call_args.args[0])
+
+    @patch("subprocess.run")
+    def test_execute_text_does_not_append_api(self, mock_run):
+        mock_run.return_value = MagicMock(returncode=0, stdout="text", stderr="")
+        self.executor.execute(["--version"], mode="TEXT")
+        self.assertNotIn("--api", mock_run.call_args.args[0])
 
     @patch.dict(os.environ, {"PATH": "/ambient/bin", "KEEP": "yes"}, clear=True)
     @patch("subprocess.run")
@@ -86,8 +121,16 @@ class TestExecutor(unittest.TestCase):
     @patch("subprocess.Popen")
     def test_execute_spawn_success(self, mock_popen):
         # Spawn mode should not wait for the process
-        self.executor.execute(["gui"], mode="SPAWN")
+        result = self.executor.execute(["gui"], mode="SPAWN")
         mock_popen.assert_called()
+        self.assertIsNone(result)
+
+    @patch("subprocess.run")
+    def test_execute_non_spawn_returns_response(self, mock_run):
+        # Non-SPAWN modes always return a response (never None).
+        mock_run.return_value = MagicMock(returncode=0, stdout='{"ok": true}', stderr="")
+        result = self.executor.execute(["backup"], mode="JSON")
+        self.assertIsNotNone(result)
 
     @patch.dict(os.environ, {"PATH": "/ambient/bin"}, clear=True)
     @patch("subprocess.Popen")
