@@ -1,0 +1,16 @@
+{
+  "date": "2026-06-13",
+  "task_objective": "Bound Ludusavi discovery verification with a 15-second timeout",
+  "files_modified": [
+    "src/pyludusavi/discovery.py",
+    "tests/test_discovery.py",
+    "README.md",
+    "docs/specs/compatibility_policy.md"
+  ],
+  "tests_added": [
+    "test_verify_timeout_raises_error_for_explicit_path",
+    "test_verify_timeout_on_path_falls_back_to_flatpak"
+  ],
+  "design_decisions": "Added _DISCOVERY_VERIFY_TIMEOUT_SECONDS = 15.0 to discovery.py and applied it to subprocess.run. Caught subprocess.TimeoutExpired alongside OSError to return False. Kept timeout fixed and internal, without exposing it to public API.",
+  "results": "Implementation passes all existing and new tests. Discovery probes will no longer hang indefinitely."
+}

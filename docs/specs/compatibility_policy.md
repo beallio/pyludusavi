@@ -35,3 +35,4 @@ This document serves as the Source of Truth for the Ludusavi Python wrapper.
 3. **Execution Safety**:
     - The wrapper will not treat `stderr` as a failure unless the `returncode` is non-zero.
     - `LudusaviContractError` will be raised if a command expected to return JSON returns non-JSON data.
+    - The background probe that verifies the Ludusavi executable during discovery is strictly bounded to a 15-second timeout to prevent indefinite hangs.
