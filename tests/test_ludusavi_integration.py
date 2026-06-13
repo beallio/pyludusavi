@@ -167,3 +167,25 @@ class TestLudusaviIntegration(unittest.TestCase):
             self.ludusavi.wrap(
                 ["./game.exe"], name="Witcher 3", cloud_sync=True, no_cloud_sync=True
             )
+
+    @patch("pyludusavi.core.LudusaviExecutor.execute")
+    def test_cloud_set(self, mock_execute):
+        mock_execute.return_value = LudusaviResponse(data="ok", raw="ok", warnings="", command=[])
+        self.ludusavi.cloud_set("dropbox", options=["token=x"])
+        mock_execute.assert_called_with(["cloud", "set", "dropbox", "token=x"], mode="TEXT")
+
+    @patch("pyludusavi.core.LudusaviExecutor.execute")
+    def test_complete(self, mock_execute):
+        mock_execute.return_value = LudusaviResponse(
+            data="#completions", raw="#completions", warnings="", command=[]
+        )
+        result = self.ludusavi.complete("bash")
+        self.assertEqual(result, "#completions")
+        mock_execute.assert_called_with(["complete", "bash"], mode="TEXT")
+
+    @patch("pyludusavi.core.LudusaviExecutor.execute")
+    def test_open_gui(self, mock_execute):
+        mock_execute.return_value = None
+        result = self.ludusavi.open_gui(custom_game="My Game")
+        self.assertIsNone(result)
+        mock_execute.assert_called_with(["gui", "--custom-game", "My Game"], mode="SPAWN")

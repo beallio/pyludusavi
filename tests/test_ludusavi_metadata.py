@@ -115,6 +115,17 @@ class TestLudusaviMetadata(unittest.TestCase):
         )
 
     @patch("pyludusavi.core.LudusaviExecutor.execute")
+    def test_schema_yaml_uses_text_mode(self, mock_execute):
+        mock_execute.return_value = LudusaviResponse(
+            data="schema-yaml", raw="schema-yaml", warnings="", command=[]
+        )
+        result = self.ludusavi.schema("config", format="yaml")
+        self.assertEqual(result, "schema-yaml")
+        mock_execute.assert_called_with(
+            ["schema", "--format", "yaml", "config"], mode="TEXT", auto_api=False
+        )
+
+    @patch("pyludusavi.core.LudusaviExecutor.execute")
     def test_manifest_update(self, mock_execute):
         mock_execute.return_value = LudusaviResponse(data="ok", raw="ok", warnings="", command=[])
         self.ludusavi.manifest_update()

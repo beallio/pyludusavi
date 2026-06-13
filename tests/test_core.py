@@ -65,6 +65,24 @@ class TestExecutor(unittest.TestCase):
         response = self.executor.execute(["--version"], mode="TEXT")
         self.assertEqual(response.data, "ludusavi 0.31.0")
 
+    @patch("subprocess.run")
+    def test_execute_json_auto_appends_api(self, mock_run):
+        mock_run.return_value = MagicMock(returncode=0, stdout='{"ok": true}', stderr="")
+        self.executor.execute(["backup"], mode="JSON")
+        self.assertEqual(mock_run.call_args.args[0][-1], "--api")
+
+    @patch("subprocess.run")
+    def test_execute_json_no_auto_api_when_disabled(self, mock_run):
+        mock_run.return_value = MagicMock(returncode=0, stdout='{"ok": true}', stderr="")
+        self.executor.execute(["api"], mode="JSON", auto_api=False)
+        self.assertNotIn("--api", mock_run.call_args.args[0])
+
+    @patch("subprocess.run")
+    def test_execute_text_does_not_append_api(self, mock_run):
+        mock_run.return_value = MagicMock(returncode=0, stdout="text", stderr="")
+        self.executor.execute(["--version"], mode="TEXT")
+        self.assertNotIn("--api", mock_run.call_args.args[0])
+
     @patch.dict(os.environ, {"PATH": "/ambient/bin", "KEEP": "yes"}, clear=True)
     @patch("subprocess.run")
     def test_executor_merges_instance_env_for_run(self, mock_run):

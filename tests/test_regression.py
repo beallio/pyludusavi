@@ -1,12 +1,14 @@
 import unittest
 import json
-import os
+from pathlib import Path
 from pyludusavi.core import LudusaviResponse
+
+FIXTURE_DIR = Path(__file__).resolve().parents[1] / "docs" / "specs" / "fixtures"
 
 
 class TestRegression(unittest.TestCase):
     def load_fixture(self, name):
-        path = os.path.join("docs", "specs", "fixtures", f"{name}.json")
+        path = FIXTURE_DIR / f"{name}.json"
         with open(path, "r") as f:
             return json.load(f)
 
