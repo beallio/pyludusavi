@@ -1,7 +1,14 @@
 import unittest
 import os
+import subprocess
 from unittest.mock import patch, MagicMock
-from pyludusavi.core import LudusaviExecutor, LudusaviExecutionError, LudusaviContractError
+from pyludusavi.core import (
+    LudusaviExecutor,
+    LudusaviError,
+    LudusaviExecutionError,
+    LudusaviContractError,
+    LudusaviTimeoutError,
+)
 
 
 class TestExecutor(unittest.TestCase):
@@ -41,6 +48,16 @@ class TestExecutor(unittest.TestCase):
         mock_run.return_value = MagicMock(returncode=0, stdout="Invalid JSON output", stderr="")
         with self.assertRaises(LudusaviContractError):
             self.executor.execute(["backup"], mode="JSON")
+
+    @patch("subprocess.run")
+    def test_execute_timeout_raises_timeout_error(self, mock_run):
+        mock_run.side_effect = subprocess.TimeoutExpired(cmd=["ludusavi"], timeout=30)
+        with self.assertRaises(LudusaviTimeoutError):
+            self.executor.execute(["backup"], mode="JSON")
+
+    def test_timeout_error_is_ludusavi_error(self):
+        # Existing callers catch LudusaviError; timeout must remain compatible.
+        self.assertTrue(issubclass(LudusaviTimeoutError, LudusaviError))
 
     @patch("subprocess.run")
     def test_execute_text_success(self, mock_run):

@@ -33,6 +33,12 @@ class LudusaviContractError(LudusaviError):
     pass
 
 
+class LudusaviTimeoutError(LudusaviError):
+    """Raised when the Ludusavi process exceeds its timeout."""
+
+    pass
+
+
 @dataclass
 class LudusaviResponse(Generic[T]):
     """Container for Ludusavi command responses."""
@@ -106,7 +112,9 @@ class LudusaviExecutor:
                 env=subprocess_env,
             )
         except subprocess.TimeoutExpired as e:
-            raise LudusaviError(f"Ludusavi command timed out after {timeout}s: {full_cmd}") from e
+            raise LudusaviTimeoutError(
+                f"Ludusavi command timed out after {timeout}s: {full_cmd}"
+            ) from e
 
         if result.returncode != 0:
             raise LudusaviExecutionError(full_cmd, result.returncode, result.stdout, result.stderr)
