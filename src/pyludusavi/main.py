@@ -21,8 +21,8 @@ class Ludusavi:
 
     def __init__(
         self,
-        explicit_path: Optional[str] = None,
-        config_dir: Optional[str] = None,
+        explicit_path: Optional[Union[str, Path]] = None,
+        config_dir: Optional[Union[str, Path]] = None,
         no_manifest_update: bool = False,
         flatpak_id: Optional[str] = None,
         env: Optional[Mapping[str, str]] = None,
@@ -47,7 +47,7 @@ class Ludusavi:
         # Add global options to prefix if they apply to the binary call
         # Note: --config and --no-manifest-update are global flags
         if config_dir:
-            self.command_prefix.extend(["--config", config_dir])
+            self.command_prefix.extend(["--config", str(config_dir)])
         if no_manifest_update:
             self.command_prefix.append("--no-manifest-update")
 
