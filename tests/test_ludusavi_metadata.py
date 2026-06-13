@@ -89,6 +89,18 @@ class TestLudusaviMetadata(unittest.TestCase):
         )
 
     @patch("pyludusavi.core.LudusaviExecutor.execute")
+    def test_manifest_update(self, mock_execute):
+        mock_execute.return_value = LudusaviResponse(data="ok", raw="ok", warnings="", command=[])
+        self.ludusavi.manifest_update()
+        mock_execute.assert_called_with(["manifest", "update"], mode="TEXT", timeout=None)
+
+    @patch("pyludusavi.core.LudusaviExecutor.execute")
+    def test_manifest_update_force_and_timeout(self, mock_execute):
+        mock_execute.return_value = LudusaviResponse(data="ok", raw="ok", warnings="", command=[])
+        self.ludusavi.manifest_update(force=True, timeout=5.0)
+        mock_execute.assert_called_with(["manifest", "update", "--force"], mode="TEXT", timeout=5.0)
+
+    @patch("pyludusavi.core.LudusaviExecutor.execute")
     def test_manifest_show(self, mock_execute):
         mock_execute.return_value = LudusaviResponse(
             data={"game": {}},

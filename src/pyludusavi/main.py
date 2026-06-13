@@ -99,13 +99,17 @@ class Ludusavi:
         assert response is not None
         return response
 
-    def manifest_update(self, force: bool = False) -> LudusaviResponse[str]:
+    def manifest_update(
+        self, force: bool = False, timeout: Optional[float] = None
+    ) -> LudusaviResponse[str]:
         """
         Check for any manifest updates and download if available.
         By default, does nothing if the most recent check was within the last 24 hours.
 
         Args:
             force: Check again even if the most recent check was within the last 24 hours.
+            timeout: Maximum time to wait for the process; None means no limit
+                (downloading the manifest can take a while).
 
         Returns:
             LudusaviResponse[str]: The raw text response from the update check.
@@ -113,7 +117,7 @@ class Ludusavi:
         args = ["manifest", "update"]
         if force:
             args.append("--force")
-        response = self.executor.execute(args, mode="TEXT")
+        response = self.executor.execute(args, mode="TEXT", timeout=timeout)
         assert response is not None
         return response
 
@@ -481,6 +485,7 @@ class Ludusavi:
         force: bool = False,
         preview: bool = False,
         gui: bool = False,
+        timeout: Optional[float] = None,
     ) -> LudusaviResponse[LudusaviApiOutput]:
         """
         Upload your local backups to the cloud, overwriting any existing cloud backups.
@@ -492,6 +497,8 @@ class Ludusavi:
             force: Don't ask for confirmation.
             preview: Check what would change, but don't actually apply the changes.
             gui: Use GUI dialogs for prompts and some information.
+            timeout: Maximum time to wait for the process; None means no limit
+                (cloud transfers can take a while).
 
         Returns:
             LudusaviResponse: The JSON response confirming the upload.
@@ -509,7 +516,7 @@ class Ludusavi:
             args.append("--gui")
         if games:
             args.extend(games)
-        response = self.executor.execute(args, mode="JSON")
+        response = self.executor.execute(args, mode="JSON", timeout=timeout)
         assert response is not None
         return response
 
@@ -521,6 +528,7 @@ class Ludusavi:
         force: bool = False,
         preview: bool = False,
         gui: bool = False,
+        timeout: Optional[float] = None,
     ) -> LudusaviResponse[LudusaviApiOutput]:
         """
         Download your cloud backups, overwriting any existing local backups.
@@ -532,6 +540,8 @@ class Ludusavi:
             force: Don't ask for confirmation.
             preview: Check what would change, but don't actually apply the changes.
             gui: Use GUI dialogs for prompts and some information.
+            timeout: Maximum time to wait for the process; None means no limit
+                (cloud transfers can take a while).
 
         Returns:
             LudusaviResponse: The JSON response confirming the download.
@@ -549,7 +559,7 @@ class Ludusavi:
             args.append("--gui")
         if games:
             args.extend(games)
-        response = self.executor.execute(args, mode="JSON")
+        response = self.executor.execute(args, mode="JSON", timeout=timeout)
         assert response is not None
         return response
 
@@ -585,19 +595,23 @@ class Ludusavi:
         assert response is not None
         return response
 
-    def bulk_api(self, input_data: Dict[str, Any]) -> LudusaviResponse[LudusaviApiOutput]:
+    def bulk_api(
+        self, input_data: Dict[str, Any], timeout: Optional[float] = None
+    ) -> LudusaviResponse[LudusaviApiOutput]:
         """
         Execute bulk requests using JSON input.
 
         Args:
             input_data: JSON data containing the bulk requests.
                 Use the `schema('api-input')` command to see the format.
+            timeout: Maximum time to wait for the process; None means no limit
+                (bulk requests may include long-running backups).
 
         Returns:
             LudusaviResponse: The JSON response containing the results for each request.
         """
         response = self.executor.execute(
-            ["api"], mode="STDIN_JSON", input_data=input_data, auto_api=False
+            ["api"], mode="STDIN_JSON", input_data=input_data, auto_api=False, timeout=timeout
         )
         assert response is not None
         return response
@@ -624,6 +638,7 @@ class Ludusavi:
         cloud_sync: bool = False,
         no_cloud_sync: bool = False,
         ask_downgrade: bool = False,
+        timeout: Optional[float] = None,
     ) -> LudusaviResponse[str]:
         """
         Wrap restore/backup around game execution.
@@ -649,6 +664,8 @@ class Ludusavi:
             cloud_sync: Upload any changes to the cloud when the backup is complete.
             no_cloud_sync: Don't perform any cloud checks or synchronization.
             ask_downgrade: Ask what to do when a backup is older/newer than live data.
+            timeout: Maximum time to wait for the process; None means no limit
+                (the wrapped process runs for as long as the game runs).
 
         Returns:
             LudusaviResponse: The raw text response confirming the wrap operation.
@@ -697,7 +714,7 @@ class Ludusavi:
 
         args.append("--")
         args.extend(command)
-        response = self.executor.execute(args, mode="TEXT")
+        response = self.executor.execute(args, mode="TEXT", timeout=timeout)
         assert response is not None
         return response
 

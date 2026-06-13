@@ -28,7 +28,7 @@ class TestLudusaviIntegration(unittest.TestCase):
         payload = {"requests": []}
         self.ludusavi.bulk_api(payload)
         mock_execute.assert_called_with(
-            ["api"], mode="STDIN_JSON", input_data=payload, auto_api=False
+            ["api"], mode="STDIN_JSON", input_data=payload, auto_api=False, timeout=None
         )
 
     @patch("pyludusavi.core.LudusaviExecutor.execute")
@@ -56,6 +56,7 @@ class TestLudusaviIntegration(unittest.TestCase):
                 "Witcher 3",
             ],
             mode="JSON",
+            timeout=None,
         )
 
     @patch("pyludusavi.core.LudusaviExecutor.execute")
@@ -83,6 +84,7 @@ class TestLudusaviIntegration(unittest.TestCase):
                 "Witcher 3",
             ],
             mode="JSON",
+            timeout=None,
         )
 
     @patch("pyludusavi.core.LudusaviExecutor.execute")
@@ -92,6 +94,7 @@ class TestLudusaviIntegration(unittest.TestCase):
         mock_execute.assert_called_with(
             ["wrap", "--name", "Witcher 3", "--", "./game.exe", "--arg"],
             mode="TEXT",
+            timeout=None,
         )
 
     @patch("pyludusavi.core.LudusaviExecutor.execute")
@@ -148,6 +151,7 @@ class TestLudusaviIntegration(unittest.TestCase):
                 "292030",
             ],
             mode="TEXT",
+            timeout=None,
         )
 
     def test_wrap_requires_name_or_infer(self):
