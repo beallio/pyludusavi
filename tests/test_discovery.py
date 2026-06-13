@@ -115,3 +115,12 @@ class TestDiscovery(unittest.TestCase):
         mock_which.return_value = None
         with self.assertRaises(LudusaviNotFoundError):
             find_ludusavi()
+
+    @patch("shutil.which")
+    @patch("subprocess.run")
+    def test_verify_treats_oserror_as_not_found(self, mock_run, mock_which):
+        # A path component that is a file raises NotADirectoryError (an OSError
+        # that is neither FileNotFoundError nor PermissionError).
+        mock_run.side_effect = NotADirectoryError()
+        with self.assertRaises(LudusaviNotFoundError):
+            find_ludusavi(explicit_path="/some/file/ludusavi")

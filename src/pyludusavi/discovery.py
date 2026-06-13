@@ -91,5 +91,5 @@ def _verify(prefix: list[str], env: Optional[dict[str, str]] = None) -> bool:
                 env=env,
             )
         return result.returncode == 0
-    except (FileNotFoundError, PermissionError):
+    except OSError:
         return False
