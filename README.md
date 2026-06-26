@@ -1,5 +1,10 @@
 # pyludusavi
 
+[![PyPI version](https://img.shields.io/pypi/v/pyludusavi.svg?cacheBuster=030)](https://pypi.org/project/pyludusavi/)
+[![CI](https://github.com/beallio/pyludusavi/actions/workflows/workflow.yml/badge.svg?cacheBuster=030)](https://github.com/beallio/pyludusavi/actions/workflows/workflow.yml)
+[![Python versions](https://img.shields.io/pypi/pyversions/pyludusavi.svg?cacheBuster=030)](https://pypi.org/project/pyludusavi/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?cacheBuster=030)](https://github.com/beallio/pyludusavi/blob/main/LICENSE)
+
 A robust, type-safe Python wrapper for the [Ludusavi](https://github.com/mtkennerly/ludusavi) CLI.
 
 ## Features
