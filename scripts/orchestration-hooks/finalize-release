@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# Project release step for pyludusavi. Invoked by orchestration/finalize AFTER the
+# feature branch has been merged into the base branch.
+#
+# Release/publish is DEFERRED and opt-in for this project (finalize is
+# local-by-default; push and release happen only on explicit request). This hook
+# is intentionally a no-op so local finalize succeeds without publishing. Fill in
+# the real release trigger here when a release is actually wanted.
+set -euo pipefail
+
+version="${1:-}"
+echo "finalize-release: no release step configured (deferred/opt-in); version=${version:-none}"
+exit 0
