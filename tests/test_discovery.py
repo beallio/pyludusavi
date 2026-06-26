@@ -15,7 +15,7 @@ class TestDiscovery(unittest.TestCase):
         result = find_ludusavi(explicit_path=path)
         self.assertEqual(result, [path])
         mock_run.assert_called_with(
-            [path, "--version"], capture_output=True, text=True, check=False, timeout=15.0
+            [path, "--version"], capture_output=True, text=True, check=False, env=None, timeout=15.0
         )
 
     @patch.dict(os.environ, {"PATH": "/ambient/bin", "KEEP": "yes"}, clear=True)
@@ -57,7 +57,12 @@ class TestDiscovery(unittest.TestCase):
         result = find_ludusavi(explicit_path=path)
         self.assertEqual(result, [str(path)])
         mock_run.assert_called_with(
-            [str(path), "--version"], capture_output=True, text=True, check=False, timeout=15.0
+            [str(path), "--version"],
+            capture_output=True,
+            text=True,
+            check=False,
+            env=None,
+            timeout=15.0,
         )
 
     @patch("shutil.which")
@@ -84,6 +89,7 @@ class TestDiscovery(unittest.TestCase):
             capture_output=True,
             text=True,
             check=False,
+            env=None,
             timeout=15.0,
         )
 
@@ -96,12 +102,13 @@ class TestDiscovery(unittest.TestCase):
         result = find_ludusavi(explicit_flatpak_id="com.github.mtkennerly.ludusavi")
 
         self.assertEqual(result, ["flatpak", "run", "com.github.mtkennerly.ludusavi"])
-        mock_which.assert_called_once_with("flatpak")
+        mock_which.assert_called_once_with("flatpak", path=None)
         mock_run.assert_called_with(
             ["flatpak", "run", "com.github.mtkennerly.ludusavi", "--version"],
             capture_output=True,
             text=True,
             check=False,
+            env=None,
             timeout=15.0,
         )
 
