@@ -15,3 +15,11 @@ def test_api_output_optional_top_level_fields():
 def test_api_output_accepts_games_only():
     out: LudusaviApiOutput = {"games": {}}
     assert out["games"] == {}
+
+
+def test_api_error_details_keys_optional():
+    from pyludusavi.models import ApiErrorDetails
+
+    for key in ("cloudConflict", "cloudSyncFailed", "someGamesFailed", "unknownGames"):
+        assert key in ApiErrorDetails.__optional_keys__
+        assert key not in ApiErrorDetails.__required_keys__

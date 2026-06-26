@@ -125,18 +125,12 @@ lud.wrap(["steam", "-applaunch", "292030"], infer="steam", force=True)
 ```
 
 #### Game Aliases
-`add_game_alias()` maps a custom name to an existing manifest title by updating
-Ludusavi's `customGames` configuration using only the Python standard library. It is
-**idempotent** (no write occurs if the alias already exists unchanged), updates the
-target in place if the same name already points at a different alias, and writes
-**atomically** (via a temporary file and rename) so an interrupted write cannot corrupt
-`config.yaml`. The config is written as JSON, which Ludusavi reads as YAML; this does not
-preserve existing comments or formatting. Use `get_game_alias()` to read back the alias
-for a custom name (returns `None` if not found).
+`get_game_alias(name)` returns the manifest title a custom name is aliased to (or
+`None`). Custom games / aliases are created in the Ludusavi GUI or config file; this
+library reads them but does not write them.
 
 ```python
-lud.add_game_alias("My Game", "The Witcher 3")
-lud.get_game_alias("My Game")  # -> "The Witcher 3"
+lud.get_game_alias("My Game")  # -> "The Witcher 3" or None
 ```
 
 #### Timeouts
