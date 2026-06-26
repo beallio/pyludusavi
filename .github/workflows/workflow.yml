@@ -60,6 +60,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release create ${{ github.ref_name }} \
-            --title "${{ github.ref_name }}" \
-            --generate-notes
+          # Idempotent: if a release for this tag already exists (e.g. a curated
+          # release was created manually with a custom title/description), leave
+          # it untouched so CI doesn't clobber it or fail. Only auto-generate a
+          # release when none exists yet.
+          if gh release view "${{ github.ref_name }}" >/dev/null 2>&1; then
+            echo "Release ${{ github.ref_name }} already exists; leaving it as-is."
+          else
+            gh release create ${{ github.ref_name }} \
+              --title "${{ github.ref_name }}" \
+              --generate-notes
+          fi
